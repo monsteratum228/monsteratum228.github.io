@@ -502,10 +502,10 @@ document.addEventListener('DOMContentLoaded', () => {
              if (starCounts[i] > 0) { // Показываем только те, что есть
                   summaryHTML += `
                      <div class="star-rating-line">
-                         <span class="star-icons">${'<i class="fas fa-star"></i>'.repeat(i)}</span>
-                         <span class="star-label">${i} ${i > 1 && i < 5 ? 'звезды' : 'звезд'}:</span>
-                         <span class="star-count">${starCounts[i]}</span>
-                     </div>
+                    <span class="star-icons">${'<i class="fas fa-star"></i>'.repeat(i)}</span>
+                    <span class="star-label">${i} ${i === 1 ? 'звезда' : (i > 1 && i < 5 ? 'звезды' : 'звезд')}:</span>
+                    <span class="star-count">${starCounts[i]}</span>
+                    </div>
                  `;
              }
          }

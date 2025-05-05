@@ -1,6 +1,6 @@
 /* Основные стили и переменные */
 :root {
-    --primary-pink: #FFD1DC; /* Нежно-розовый */
+    --primary-pink: #f2c08e; /* кандидаты: f2c08e FFD1DC */
     --soft-beige: #FFF0E1; /* Мягкий бежевый */
     --white: #FFFFFF;
     --text-color: #5D4037; /* Коричневатый для текста */
@@ -24,7 +24,7 @@
      --green: #4CAF50;
 
     /* Шрифты */
-    --font-main: 'Nunito', sans-serif; /* Новый шрифт */
+    --font-main: 'Russo One', sans-serif; /* Новый шрифт */
 }
 
 * {
@@ -48,8 +48,10 @@ body {
     left: 0;
     width: 100%;
     height: var(--header-height);
-    background-color: var(--white);
+    background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-bottom-left-radius: 12px; /* Закругляем левый нижний угол */
+    border-bottom-right-radius: 12px; 
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -67,7 +69,7 @@ body {
 .header-icons {
     display: flex;
     align-items: center;
-    gap: 15px; /* Расстояние между иконками */
+    gap: 30px; /* Расстояние между иконками */
 }
 
 .header-icon {
@@ -75,7 +77,7 @@ body {
     cursor: pointer;
 }
 .header-icon i {
-    font-size: 1.4em;
+    font-size: 1.8em;
     color: var(--text-color);
     display: block; /* Убирает лишние отступы под иконкой */
 }
@@ -93,7 +95,7 @@ body {
     border-radius: 50%;
     width: 17px; /* Размер */
     height: 17px;
-    font-size: 0.75em; /* Размер цифры */
+    font-size: 0.9em; /* Размер цифры */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -108,8 +110,8 @@ body {
 }
 
 .avatar {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     object-fit: cover;
     border: 1px solid var(--border-color);
@@ -117,12 +119,12 @@ body {
 
 .rating {
     position: absolute;
-    bottom: -9px;
-    right: -8px;
+    bottom: -4px;
+    right: -4px;
     background-color: var(--white);
     border-radius: 10px;
     padding: 1px 5px;
-    font-size: 0.7em;
+    font-size: 0.73em;
     font-weight: bold;
     border: 1px solid var(--border-color);
     box-shadow: 0 1px 2px rgba(0,0,0,0.1);
@@ -136,7 +138,7 @@ body {
 }
 
 .settings-icon i {
-    font-size: 1.4em;
+    font-size: 1.8em;
     color: var(--text-color);
     cursor: pointer;
 }
@@ -369,8 +371,8 @@ body {
 }
 
 .progress-bar-fill.reliability {
-    background: linear-gradient(to right, #c1ffc2, #5bff00) /* Градиент от красного к зеленому */
-}
+    background: linear-gradient(to right, var(--red), var(--orange), var(--yellow), var(--light-green), var(--green));
+}   
 
 .xp-bar-fill {
     background: linear-gradient(to right, var(--accent-cyan), var(--accent-blue)); /* Градиент для XP */
@@ -688,6 +690,7 @@ body {
     border-radius: 20px; /* Скругленные края */
     margin-bottom: 15px;
     text-align: center;
+    font-family: var(--font-main);
 }
 #search-input:focus {
     outline: none;
@@ -705,6 +708,7 @@ body {
     border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    
 }
 .search-button:hover {
     background-color: #FFB6C1; /* Чуть темнее розовый при наведении */
@@ -725,6 +729,7 @@ body {
     align-items: center;
     padding: 5px 0;
     z-index: 1000;
+
 }
 
 .nav-button {
@@ -743,6 +748,7 @@ body {
 .nav-button i {
     font-size: 1.6em; /* Размер иконки */
     margin-bottom: 4px;
+    
 }
 
 .nav-button.active {
@@ -751,8 +757,6 @@ body {
 .nav-button:hover {
      color: var(--text-color); /* Цвет при наведении */
 }
-
-
 /* Стили модального окна */
 .modal-overlay {
     position: fixed;
