@@ -102,57 +102,58 @@
                     <span>Отзывы на меня</span>
                     <i class="fas fa-chevron-right arrow-icon"></i>
                 </button>
-                 <button class="action-button" data-action="show-achievements">
-                    <i class="fas fa-trophy action-icon"></i>
-                    <span>Достижения</span>
-                     <i class="fas fa-chevron-right arrow-icon"></i>
-                </button>
-                 <button class="action-button" data-action="show-referral">
-                    <i class="fas fa-users action-icon"></i>
-                    <span>Реферальная программа</span>
-                     <i class="fas fa-chevron-right arrow-icon"></i>
-                </button>
-                 <button class="action-button" data-action="show-partnership">
-                    <i class="fas fa-handshake action-icon"></i>
-                    <span>Партнерство</span>
-                     <i class="fas fa-chevron-right arrow-icon"></i>
-                </button>
-            </div>
+                </div>
 
-             <div class="profile-content-section" id="content-reviews-history">
+            <div class="profile-content-section" id="content-reviews-history">
                 <h4>Оставленные мной отзывы:</h4>
-                 <div class="review-item">
-                    <p><strong>Отзыв на Петра:</strong> "Отличная встреча, все прошло хорошо!"</p>
-                    <span><i class="fas fa-star"></i> 5.0</span> - <small>1 мая 2025</small>
+                <div class="review-item">
+                     <div class="review-header">
+                         <img src="https://via.placeholder.com/30/7B3F00/FFFFFF?text=П" alt="Аватар" class="review-avatar">
+                         <div class="review-info">
+                            <p><strong>Отзыв на Петра:</strong> "Отличная встреча, все прошло хорошо!"</p>
+                            <div class="review-meta">
+                                <span><i class="fas fa-star"></i> 5.0</span> - <small>1 мая 2025</small>
+                            </div>
+                         </div>
+                     </div>
                 </div>
                  <div class="review-item">
-                    <p><strong>Отзыв на Марию:</strong> "Приятный собеседник."</p>
-                    <span><i class="fas fa-star"></i> 4.5</span> - <small>28 апр 2025</small>
+                    <div class="review-header">
+                         <img src="https://via.placeholder.com/30/FF69B4/FFFFFF?text=М" alt="Аватар" class="review-avatar">
+                         <div class="review-info">
+                            <p><strong>Отзыв на Марию:</strong> "Приятный собеседник."</p>
+                            <div class="review-meta">
+                                <span><i class="fas fa-star"></i> 4.5</span> - <small>28 апр 2025</small>
+                            </div>
+                         </div>
+                     </div>
                 </div>
             </div>
             <div class="profile-content-section" id="content-reviews-my">
                 <h4>Отзывы, оставленные на меня:</h4>
                  <div class="review-item">
-                     <p><strong>От Ивана:</strong> "Все супер, рекомендую!"</p>
-                     <span><i class="fas fa-star"></i> 5.0</span> - <small>3 мая 2025</small>
-                </div>
+                    <div class="review-header">
+                        <img src="https://via.placeholder.com/30/4682B4/FFFFFF?text=И" alt="Аватар" class="review-avatar">
+                        <div class="review-info">
+                            <p><strong>От Ивана:</strong> "Все супер, рекомендую!"</p>
+                            <div class="review-meta">
+                                <span><i class="fas fa-star"></i> 5.0</span> - <small>3 мая 2025</small>
+                            </div>
+                        </div>
+                    </div>
+                 </div>
                  <div class="review-item">
-                    <p><strong>От Елены:</strong> "Немного опоздала, но в целом все хорошо."</p>
-                    <span><i class="fas fa-star"></i> 4.0</span> - <small>30 апр 2025</small>
-                </div>
+                      <div class="review-header">
+                        <img src="https://via.placeholder.com/30/8A2BE2/FFFFFF?text=Е" alt="Аватар" class="review-avatar">
+                        <div class="review-info">
+                            <p><strong>От Елены:</strong> "Немного опоздала, но в целом все хорошо."</p>
+                            <div class="review-meta">
+                                <span><i class="fas fa-star"></i> 4.0</span> - <small>30 апр 2025</small>
+                             </div>
+                        </div>
+                     </div>
+                 </div>
             </div>
-             <div class="profile-content-section" id="content-achievements">
-                <h4>Мои Достижения:</h4>
-                <p>Здесь будут отображаться ваши достижения...</p>
-             </div>
-              <div class="profile-content-section" id="content-referral">
-                <h4>Реферальная программа:</h4>
-                <p>Приглашайте друзей и получайте бонусы!</p>
-             </div>
-              <div class="profile-content-section" id="content-partnership">
-                <h4>Партнерство:</h4>
-                <p>Информация для партнеров.</p>
-             </div>
 
         </section>
 
@@ -208,7 +209,31 @@
                 </div>
             </div>
         </section>
-
+        <section id="page-menu" class="page">
+            <h2>Меню</h2>
+            <div class="menu-actions">
+                 <button class="action-button" data-modal-target="modal-achievements">
+                    <i class="fas fa-trophy action-icon"></i>
+                    <span>Достижения</span>
+                    </button>
+                 <button class="action-button" data-modal-target="modal-referral">
+                    <i class="fas fa-users action-icon"></i>
+                    <span>Реферальная программа</span>
+                </button>
+                 <button class="action-button" data-modal-target="modal-partnership">
+                    <i class="fas fa-handshake action-icon"></i>
+                    <span>Партнерство</span>
+                </button>
+                <button class="action-button" data-modal-target="modal-settings">
+                    <i class="fas fa-cog action-icon"></i>
+                    <span>Настройки</span>
+                </button>
+                 <button class="action-button" data-modal-target="modal-support">
+                    <i class="fas fa-life-ring action-icon"></i>
+                    <span>Поддержка</span>
+                </button>
+                 </div>
+        </section>
         <section id="page-search" class="page">
             <div class="search-container">
                 <h2>Поиск пользователя</h2>
@@ -220,24 +245,28 @@
     </main>
 
     <footer class="app-footer">
-         <button class="nav-button active" data-target="page-profile">
-            <i class="fas fa-user"></i>
-            <span>Профиль</span>
+        <button class="nav-button" data-target="page-search">
+            <i class="fas fa-search"></i>
+            <span>Поиск</span>
         </button>
         <button class="nav-button" data-target="page-people">
             <i class="fas fa-users"></i>
             <span>Люди</span>
         </button>
-        <button class="nav-button" data-target="page-search">
-            <i class="fas fa-search"></i>
-            <span>Поиск</span>
+        <button class="nav-button" data-target="page-menu">
+            <i class="fas fa-bars"></i> <span>Меню</span>
         </button>
+        <button class="nav-button active" data-target="page-profile">
+            <i class="fas fa-user"></i>
+            <span>Профиль</span>
+        </button>
+       
     </footer>
 
     <div id="modal-overlay" class="modal-overlay"></div>
     <div id="profile-modal" class="modal">
          <button class="modal-close" id="modal-close-button">&times;</button>
-        <div class="modal-content">
+         <div class="modal-content">
              <div class="profile-header">
                 <img src="" alt="User Avatar" class="profile-avatar-large modal-avatar">
                 <div class="profile-info">
@@ -247,15 +276,16 @@
             </div>
             <h4>Отзывы на пользователя:</h4>
             <div class="modal-reviews">
-                <div class="review-item">
-                    <p><strong>От Ивана:</strong> "Прекрасный человек!"</p>
-                    <span><i class="fas fa-star"></i> 5.0</span> - <small>4 мая 2025</small>
                 </div>
-                <div class="review-item">
-                    <p><strong>От Марии:</strong> "Все прошло гладко."</p>
-                    <span><i class="fas fa-star"></i> 4.5</span> - <small>1 мая 2025</small>
-                </div>
-            </div>
+         </div>
+    </div>
+
+    <div id="generic-modal-overlay" class="modal-overlay generic-overlay"></div>
+    <div id="generic-modal" class="modal generic-modal">
+        <button class="modal-close generic-modal-close" id="generic-modal-close-button">&times;</button>
+        <h3 id="generic-modal-title">Заголовок</h3>
+        <div id="generic-modal-content">
+            <p>Здесь будет контент...</p>
         </div>
     </div>
 

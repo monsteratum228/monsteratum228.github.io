@@ -26,6 +26,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const profileActionButtons = document.querySelectorAll('#page-profile .action-button');
     const profileContentSections = document.querySelectorAll('#page-profile .profile-content-section');
 
+    const menuPage = document.getElementById('page-menu'); // Контейнер страницы Меню
+     // Элементы нового универсального модального окна
+     const genericModalOverlay = document.getElementById('generic-modal-overlay');
+     const genericModal = document.getElementById('generic-modal');
+     const genericModalCloseButton = document.getElementById('generic-modal-close-button');
+     const genericModalTitle = document.getElementById('generic-modal-title');
+     const genericModalContent = document.getElementById('generic-modal-content');
+ 
+ 
     // --- Инициализация Telegram Web App ---
     let tgUser = {}; // Объект для данных пользователя TG
     let userId = 'guest'; // ID пользователя
@@ -265,13 +274,138 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+    profileActionButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const action = button.getAttribute('data-action');
+            const targetContentIdMap = {
+                'show-reviews-history': 'content-reviews-history',
+                'show-reviews-my': 'content-reviews-my',
+            };
+            const targetId = targetContentIdMap[action];
 
-    // --- Открытие/закрытие модального окна (без изменений) ---
+            // Скрываем все секции контента в профиле
+            profileContentSections.forEach(section => section.classList.remove('visible'));
+
+            if (targetId) {
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.classList.add('visible');
+                    console.log(`Profile Action: ${action}, showing section: ${targetId}`);
+                }
+            }
+        });
+    });
+    // --- Обработка кнопок в МЕНЮ (открытие универсальной модалки) ---
+    if (menuPage) {
+        menuPage.addEventListener('click', (event) => {
+            const button = event.target.closest('.action-button[data-modal-target]');
+            if (!button) return; // Клик не по кнопке с модальным таргетом
+
+            const modalTargetId = button.getAttribute('data-modal-target');
+            let title = 'Информация'; // Заголовок по умолчанию
+            let contentHTML = '<p>Контент не найден.</p>'; // Контент по умолчанию
+
+            // Определяем контент и заголовок для каждой кнопки меню
+            switch (modalTargetId) {
+                case 'modal-achievements':
+                    title = 'Достижения';
+                    contentHTML = `
+                        <h4>Ваши Достижения</h4>
+                        <ul>
+                            <li><i class="fas fa-star"></i> Новичок (Уровень 1)</li>
+                            <li><i class="fas fa-comments"></i> Общительный (10+ отзывов)</li>
+                            <li><i class="fas fa-heart"></i> Надежный партнер (Рейтинг 4.8+)</li>
+                            <li>... другие достижения</li>
+                        </ul>
+                        <p>Продолжайте в том же духе!</p>
+                    `;
+                    break;
+                case 'modal-referral':
+                    title = 'Реферальная программа';
+                    contentHTML = `
+                        <h4>Пригласите друзей!</h4>
+                        <p>Поделитесь вашей уникальной ссылкой:</p>
+                        <input type="text" value="t.me/DateCheckerBot?start=${userId}" readonly style="width: 100%; padding: 8px; margin-bottom: 10px;">
+                        <p>Получайте <strong>+100 XP</strong> за каждого друга, который зарегистрируется и получит первый отзыв!</p>
+                    `;
+                    break;
+                case 'modal-partnership':
+                    title = 'Партнерство';
+                    contentHTML = `
+                        <h4>Хотите сотрудничать?</h4>
+                        <p>Мы всегда открыты для интересных предложений и партнерства.</p>
+                        <p>Свяжитесь с нами: <a href="mailto:partnership@datechecker.example">partnership@datechecker.example</a></p>
+                    `;
+                    break;
+                case 'modal-settings':
+                     title = 'Настройки';
+                     contentHTML = `
+                         <h4>Настройки приложения</h4>
+                         <p>Здесь скоро появятся настройки уведомлений, приватности и другие опции.</p>
+                         <label><input type="checkbox" checked> Получать уведомления об отзывах</label><br>
+                         <label><input type="checkbox"> Скрывать профиль от незнакомцев</label>
+                     `;
+                    break;
+                 case 'modal-support':
+                     title = 'Поддержка';
+                     contentHTML = `
+                         <h4>Служба поддержки</h4>
+                         <p>Если у вас возникли вопросы или проблемы, напишите нам:</p>
+                         <p><a href="mailto:support@datechecker.example">support@datechecker.example</a> или в Telegram <a href="https://t.me/DateCheckerSupportBot" target="_blank">@DateCheckerSupportBot</a></p>
+                     `;
+                    break;
+                // Добавьте другие case для новых кнопок меню
+            }
+
+            // Заполняем и показываем универсальную модалку
+            if (genericModalTitle) genericModalTitle.textContent = title;
+            if (genericModalContent) genericModalContent.innerHTML = contentHTML;
+            if (genericModalOverlay) genericModalOverlay.style.display = 'block';
+            if (genericModal) genericModal.style.display = 'block';
+            document.body.style.overflow = 'hidden'; // Блокируем скролл фона
+        });
+    }
+
+    // --- Закрытие УНИВЕРСАЛЬНОЙ модалки ---
+    function closeGenericModal() {
+        if (genericModalOverlay) genericModalOverlay.style.display = 'none';
+        if (genericModal) genericModal.style.display = 'none';
+        document.body.style.overflow = ''; // Возвращаем скролл фона
+    }
+    if (genericModalCloseButton) genericModalCloseButton.addEventListener('click', closeGenericModal);
+    if (genericModalOverlay) genericModalOverlay.addEventListener('click', closeGenericModal);
+
+
+    // --- Навигация по нижним кнопкам (Обновлено) ---
+    navButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetPageId = button.getAttribute('data-target');
+
+            // Скрываем все страницы
+            pages.forEach(page => page.classList.remove('active'));
+             // Показываем нужную страницу
+            const targetPage = document.getElementById(targetPageId);
+            if (targetPage) {
+                 targetPage.classList.add('active');
+                 // Скрываем все открытые секции контента в профиле, если уходим с него
+                 if (targetPageId !== 'page-profile') {
+                     profileContentSections.forEach(section => section.classList.remove('visible'));
+                 }
+                 // Закрываем универсальную модалку, если она была открыта
+                 closeGenericModal();
+            }
+
+            // Обновляем активное состояние кнопок
+            navButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+        });
+    });
+
+    // --- Открытие/закрытие модального окна ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ (обновлен вызов генерации отзывов) ---
     if (peopleGrid) {
         peopleGrid.addEventListener('click', (event) => {
             const card = event.target.closest('.profile-card');
             if (card) {
-                // ... (логика заполнения и открытия модалки как раньше) ...
                 const userId = card.getAttribute('data-user-id');
                 const cardName = card.querySelector('.card-name').textContent;
                 const cardRating = card.querySelector('.card-rating').innerHTML;
@@ -283,7 +417,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 modalAvatar.src = cardAvatarSrc || `https://via.placeholder.com/60/${getRandomColor()}/FFFFFF?text=${cardName.charAt(0)}`;
                 modalName.textContent = cardName;
                 modalRating.innerHTML = cardRating;
-                modalReviewsContainer.innerHTML = generateFakeReviews(cardName); // Используем старую функцию
+                // Генерируем отзывы С АВАТАРАМИ для модалки
+                modalReviewsContainer.innerHTML = generateFakeReviewsWithAvatars(cardName);
 
                 modalOverlay.style.display = 'block';
                 profileModal.style.display = 'block';
@@ -297,15 +432,22 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
     if (modalCloseButton) modalCloseButton.addEventListener('click', closeModal);
-    if (modalOverlay) modalOverlay.addEventListener('click', closeModal);
-
-
+    if (modalOverlay) {
+         // Важно: не закрывать универсальную модалку при клике на оверлей модалки профиля
+         modalOverlay.addEventListener('click', (event) => {
+             if (event.target === modalOverlay) { // Закрывать только если клик был именно по этому оверлею
+                 closeModal();
+             }
+         });
+    }
     // --- Вспомогательные функции (без изменений) ---
+    // --- Вспомогательные функции ---
     function getRandomColor() {
         return Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
     }
-    function generateFakeReviews(userName) {
-         const fakeReviewers = ["Иван П.", "Мария К.", "Алексей С.", "Елена В.", "Дмитрий Р."];
+
+    function generateFakeReviewsWithAvatars(userName) {
+        const fakeReviewers = ["Иван П.", "Мария К.", "Алексей С.", "Елена В.", "Дмитрий Р."];
         const fakeComments = [
             `Отличная встреча с ${userName}! Все прошло супер.`,
             `Приятно было пообщаться с ${userName}. Рекомендую!`,
@@ -321,28 +463,32 @@ document.addEventListener('DOMContentLoaded', () => {
             const rating = (Math.random() * 1.5 + 3.5).toFixed(1);
             const date = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000);
             const formattedDate = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric'});
+            // Генерируем плейсхолдер аватара для ревьюера
+            const reviewerInitial = reviewer.split(' ')[0].charAt(0) || '?';
+            const avatarPlaceholder = `https://via.placeholder.com/30/${getRandomColor()}/FFFFFF?text=${reviewerInitial}`;
+
             reviewsHtml += `
                 <div class="review-item">
-                    <p><strong>От ${reviewer}:</strong> "${comment}"</p>
-                    <span><i class="fas fa-star"></i> ${rating}</span> - <small>${formattedDate}</small>
+                    <div class="review-header">
+                         <img src="${avatarPlaceholder}" alt="Аватар ${reviewer}" class="review-avatar">
+                         <div class="review-info">
+                            <p><strong>От ${reviewer}:</strong> "${comment}"</p>
+                            <div class="review-meta">
+                                <span><i class="fas fa-star"></i> ${rating}</span>
+                                <small>${formattedDate}</small>
+                            </div>
+                         </div>
+                     </div>
                 </div>
             `;
         }
         return reviewsHtml || '<p>Отзывов пока нет.</p>';
     }
 
-     // Добавляем простой CSS для анимации тряски кнопки
+     // ... (анимация shake) ...
      const styleSheet = document.createElement("style");
      styleSheet.type = "text/css";
-     styleSheet.innerText = `
-        @keyframes shake {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-3px); }
-            50% { transform: translateX(3px); }
-            75% { transform: translateX(-3px); }
-            100% { transform: translateX(0); }
-        }
-     `;
+     styleSheet.innerText = `@keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 75% { transform: translateX(-3px); } 100% { transform: translateX(0); } }`;
      document.head.appendChild(styleSheet);
 
 
