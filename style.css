@@ -1,0 +1,745 @@
+/* Основные стили и переменные */
+:root {
+    --primary-pink: #FFD1DC; /* Нежно-розовый */
+    --soft-beige: #FFF0E1; /* Мягкий бежевый */
+    --white: #FFFFFF;
+    --text-color: #5D4037; /* Коричневатый для текста */
+    --text-light: #795548; /* Чуть светлее */
+    --accent-yellow: #FFC107; /* Более насыщенный желтый для звезд */
+    --accent-green: #8BC34A; /* Зеленый для надежности, XP */
+    --accent-blue: #03A9F4; /* Голубой */
+    --accent-purple: #9C27B0; /* Фиолетовый */
+    --accent-red: #F44336; /* Красный */
+    --accent-orange: #FF9800; /* Оранжевый */
+    --accent-cyan: #00BCD4; /* Циан */
+    --accent-gold: #FFD700; /* Золотой */
+    --border-color: #E0E0E0; /* Светло-серый для границ */
+    --overlay-color: rgba(0, 0, 0, 0.6);
+    --header-height: 60px;
+    --footer-height: 65px;
+
+    /* Шрифты */
+    --font-main: 'Nunito', sans-serif; /* Новый шрифт */
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-main); /* Применяем шрифт */
+    background-color: var(--soft-beige);
+    color: var(--text-color);
+    padding-top: var(--header-height);
+    padding-bottom: var(--footer-height);
+    line-height: 1.6;
+}
+/* Верхняя панель */
+.app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height);
+    background-color: var(--white);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Размещаем элементы по краям */
+    padding: 0 15px;
+    z-index: 1000;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.avatar-container {
+    position: relative; /* Для позиционирования рейтинга */
+    display: flex;
+    align-items: center;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 1px solid var(--border-color);
+}
+
+.rating {
+    position: absolute;
+    bottom: -2px;
+    right: -8px;
+    background-color: var(--white);
+    border-radius: 10px;
+    padding: 1px 5px;
+    font-size: 0.7em;
+    font-weight: bold;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+}
+
+.rating i.fa-star {
+    color: var(--accent-yellow);
+    margin-right: 3px;
+}
+
+.settings-icon i {
+    font-size: 1.4em;
+    color: var(--text-color);
+    cursor: pointer;
+}
+
+/* Основной контент */
+.main-content {
+    padding: 20px 15px; /* Отступы для контента */
+}
+
+.page {
+    display: none; /* Скрываем все страницы по умолчанию */
+}
+
+.page.active {
+    display: block; /* Показываем активную страницу */
+}
+
+/* Стили страницы "Профиль" */
+#page-profile .profile-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 20px;
+}
+
+.profile-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-pink);
+    margin-right: 15px;
+}
+
+.profile-info .profile-name {
+    font-size: 1.4em;
+    font-weight: 600;
+    margin: 0;
+}
+
+.profile-tabs {
+    display: flex;
+    margin-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+.profile-main-info {
+    display: flex;
+    flex-direction: column; /* Аватар сверху, имя снизу */
+    align-items: center;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+.profile-avatar-container {
+    position: relative; /* Для позиционирования уровня */
+    margin-bottom: 10px;
+}
+
+.profile-avatar-large {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--white);
+    /* Свечение будет добавляться JS через классы */
+    box-shadow: 0 0 0 4px var(--primary-pink), 0 4px 8px rgba(0, 0, 0, 0.1); /* Базовое свечение + тень */
+    transition: box-shadow 0.3s ease; /* Плавность для свечения */
+}
+
+.level-text-container {
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--primary-pink);
+    color: var(--text-color);
+    font-weight: 700;
+    font-size: 0.8em;
+    padding: 2px 8px;
+    border-radius: 10px;
+    border: 1px solid var(--white);
+    white-space: nowrap;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+/* Базовый класс для градиентного текста */
+.level-text-gradient {
+    background-clip: text;
+    -webkit-background-clip: text;
+     color: transparent;
+     font-weight: bold;
+}
+
+#profile-user-name {
+    font-size: 1.6em;
+    font-weight: 700;
+    margin: 0;
+    color: var(--text-color);
+}
+.tab-button {
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    font-size: 0.95em;
+    cursor: pointer;
+    color: var(--text-color);
+    opacity: 0.7;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px; /* Чтобы нижняя граница была на уровне общей */
+}
+
+.tab-button.active {
+    opacity: 1;
+    font-weight: 600;
+    border-bottom: 3px solid var(--primary-pink);
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h4 {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+}
+.rating-breakdown {
+    background-color: var(--white);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.rating-breakdown h3 {
+    text-align: center;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-light);
+}
+
+.rating-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Два столбца */
+    gap: 15px;
+}
+
+.rating-item {
+    background-color: var(--soft-beige);
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    border: 1px solid #eee;
+}
+.rating-item.overall {
+     grid-column: 1 / -1; /* Общий рейтинг на всю ширину */
+     background-color: var(--primary-pink); /* Выделяем общий */
+     color: var(--text-color);
+     border: none;
+}
+
+.rating-icon {
+    display: block;
+    font-size: 1.6em;
+    margin-bottom: 5px;
+    /* Цвета иконок */
+    &.chat { color: var(--accent-blue); }
+    &.date { color: var(--accent-red); }
+    &.personality { color: var(--accent-purple); }
+    &.overall { color: var(--text-color); } /* Или var(--white) */
+}
+
+.rating-item span {
+    display: block;
+    font-size: 0.9em;
+    margin-bottom: 3px;
+    color: var(--text-light);
+}
+.rating-item.overall span {
+    color: var(--text-color);
+}
+
+.rating-value {
+    font-weight: 700;
+    font-size: 1em !important; /* Перебиваем общий span */
+    color: var(--text-color) !important;
+}
+.rating-value .fa-star {
+    color: var(--accent-yellow);
+    font-size: 0.9em;
+    margin-left: 2px;
+}
+.rating-item.overall .rating-value {
+    font-size: 1.1em !important;
+}
+
+
+/* Шкала надежности и XP */
+.reliability-scale, .xp-system {
+    margin-bottom: 20px;
+}
+
+.reliability-scale label, .xp-system label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 1em;
+}
+
+.progress-bar-container, .xp-bar-container {
+    background-color: #E0E0E0;
+    border-radius: 15px;
+    height: 20px; /* Высота бара */
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-fill, .xp-bar-fill {
+    height: 100%;
+    border-radius: 15px;
+    transition: width 0.4s ease-out;
+    display: flex; /* Для центрирования текста, если понадобится внутри */
+    align-items: center;
+    justify-content: center;
+}
+
+.progress-bar-fill.reliability {
+    background: linear-gradient(to right, #c1ffc2, #5bff00) /* Градиент от красного к зеленому */
+}
+
+.xp-bar-fill {
+    background: linear-gradient(to right, var(--accent-cyan), var(--accent-blue)); /* Градиент для XP */
+}
+
+.progress-bar-text, .xp-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8em;
+    font-weight: bold;
+    color: var(--white); /* Белый текст на баре */
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.4); /* Тень для читаемости */
+    white-space: nowrap;
+}
+
+/* Тестовая кнопка */
+.test-button {
+    display: block; /* На всю ширину */
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--text-color);
+    background-color: var(--accent-yellow);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    transition: background-color 0.2s ease;
+}
+.test-button:hover {
+    background-color: #FFCA28; /* Чуть темнее желтый */
+}
+
+
+/* Разделитель */
+.profile-divider {
+    border: none;
+    height: 1px;
+    background-color: var(--border-color);
+    margin: 25px 0;
+}
+
+/* Кнопки действий */
+.profile-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px; /* Отступ перед скрытым контентом */
+}
+
+.action-button {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 12px 15px;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    text-align: left;
+    font-size: 1em;
+    font-family: var(--font-main);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.action-button:hover {
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.action-icon {
+    font-size: 1.2em;
+    margin-right: 12px;
+    color: var(--primary-pink); /* Розовые иконки */
+    width: 20px; /* Фикс ширина для выравнивания */
+    text-align: center;
+}
+
+.action-button span {
+    flex-grow: 1; /* Занимает все доступное место */
+    font-weight: 600;
+}
+
+.arrow-icon {
+    font-size: 0.9em;
+    color: var(--border-color); /* Серая стрелка */
+}
+
+/* Скрытые секции контента */
+.profile-content-section {
+    display: none; /* Скрыты по умолчанию */
+    padding: 15px;
+    background-color: var(--white);
+    border-radius: 8px;
+    margin-top: 15px; /* Отступ сверху, когда секция показана */
+    border: 1px solid var(--border-color);
+}
+.profile-content-section.visible {
+    display: block; /* Показываем активную секцию */
+}
+.profile-content-section h4 {
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    color: var(--text-light);
+    padding-bottom: 5px;
+    border-bottom: 1px dashed var(--border-color);
+}
+.review-item {
+    background-color: var(--soft-beige); /* Немного выделим */
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+}
+
+.review-item p {
+    margin-bottom: 5px;
+}
+
+.review-item span {
+    font-weight: bold;
+    font-size: 0.9em;
+}
+.review-item span i.fa-star {
+     color: var(--accent-yellow);
+}
+/* Желтый */
+.avatar-glow-yellow { box-shadow: 0 0 10px 4px var(--accent-yellow), 0 0 0 4px var(--white); }
+/* Зеленый */
+.avatar-glow-green { box-shadow: 0 0 10px 4px var(--accent-green), 0 0 0 4px var(--white); }
+/* Оранжевый */
+.avatar-glow-orange { box-shadow: 0 0 10px 4px var(--accent-orange), 0 0 0 4px var(--white); }
+/* Красный */
+.avatar-glow-red { box-shadow: 0 0 10px 4px var(--accent-red), 0 0 0 4px var(--white); }
+/* Голубой (циан) */
+.avatar-glow-cyan { box-shadow: 0 0 10px 4px var(--accent-cyan), 0 0 0 4px var(--white); }
+/* Синий */
+.avatar-glow-blue { box-shadow: 0 0 10px 4px var(--accent-blue), 0 0 0 4px var(--white); }
+/* Фиолетовый */
+.avatar-glow-purple { box-shadow: 0 0 10px 4px var(--accent-purple), 0 0 0 4px var(--white); }
+/* Розовый */
+.avatar-glow-pink { box-shadow: 0 0 10px 4px var(--primary-pink), 0 0 0 4px var(--white); }
+/* Черный/Темный (можно использовать темно-серый) */
+.avatar-glow-black { box-shadow: 0 0 10px 4px #424242, 0 0 0 4px var(--white); }
+/* Золотой */
+.avatar-glow-gold { box-shadow: 0 0 12px 5px var(--accent-gold), 0 0 0 4px var(--white); }
+
+/* Градиентные свечения */
+.avatar-glow-yellow-red { box-shadow: 0 0 12px 5px var(--accent-yellow), 0 0 5px 8px var(--accent-red), 0 0 0 4px var(--white); }
+.avatar-glow-orange-yellow { box-shadow: 0 0 12px 5px var(--accent-orange), 0 0 5px 8px var(--accent-yellow), 0 0 0 4px var(--white); }
+.avatar-glow-pink-yellow { box-shadow: 0 0 12px 5px var(--primary-pink), 0 0 5px 8px var(--accent-yellow), 0 0 0 4px var(--white); }
+.avatar-glow-pink-purple { box-shadow: 0 0 12px 5px var(--primary-pink), 0 0 5px 8px var(--accent-purple), 0 0 0 4px var(--white); }
+.avatar-glow-purple-cyan { box-shadow: 0 0 12px 5px var(--accent-purple), 0 0 5px 8px var(--accent-cyan), 0 0 0 4px var(--white); }
+.avatar-glow-blue-green { box-shadow: 0 0 12px 5px var(--accent-blue), 0 0 5px 8px var(--accent-green), 0 0 0 4px var(--white); }
+.avatar-glow-blue-cyan { box-shadow: 0 0 12px 5px var(--accent-blue), 0 0 5px 8px var(--accent-cyan), 0 0 0 4px var(--white); }
+.avatar-glow-blue-cyan-2 { box-shadow: 0 0 12px 5px var(--accent-cyan), 0 0 5px 8px var(--accent-blue), 0 0 0 4px var(--white); } /* Поменяем порядок */
+.avatar-glow-cyan-purple { box-shadow: 0 0 12px 5px var(--accent-cyan), 0 0 5px 8px var(--accent-purple), 0 0 0 4px var(--white); }
+
+
+/* Градиенты для текста уровня */
+.level-text-yellow-red { background-image: linear-gradient(45deg, var(--accent-yellow), var(--accent-red)); }
+.level-text-orange-yellow { background-image: linear-gradient(45deg, var(--accent-orange), var(--accent-yellow)); }
+.level-text-pink-yellow { background-image: linear-gradient(45deg, var(--primary-pink), var(--accent-yellow)); }
+.level-text-pink-purple { background-image: linear-gradient(45deg, var(--primary-pink), var(--accent-purple)); }
+.level-text-purple-cyan { background-image: linear-gradient(45deg, var(--accent-purple), var(--accent-cyan)); }
+.level-text-blue-green { background-image: linear-gradient(45deg, var(--accent-blue), var(--accent-green)); }
+.level-text-blue-cyan { background-image: linear-gradient(45deg, var(--accent-blue), var(--accent-cyan)); }
+.level-text-blue-cyan-2 { background-image: linear-gradient(-45deg, var(--accent-blue), var(--accent-cyan)); } /* Другой угол */
+.level-text-cyan-purple { background-image: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple)); }
+.level-text-gold { background-image: linear-gradient(45deg, #FFD700, #FFA000); } /* Золотой градиент */
+
+.review-item small {
+    color: #888;
+    font-size: 0.85em;
+    margin-left: 5px;
+}
+
+/* Стили страницы "Люди" */
+.people-grid {
+    display: grid;
+    /* Пытаемся уместить по 2-3 карточки в ряд, чтобы было похоже на 6 на экране */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 15px;
+}
+
+.profile-card {
+    background-color: var(--white);
+    border-radius: 10px;
+    overflow: hidden; /* Чтобы фото не вылезало */
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative; /* Для позиционирования аватара */
+}
+.profile-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.card-photo {
+    width: 100%;
+    padding-bottom: 133%; /* Соотношение сторон для вертикального фото (примерно 3:4) */
+    background-size: cover;
+    background-position: center;
+    background-color: #eee; /* Placeholder color */
+}
+
+.card-avatar-placeholder {
+    position: absolute;
+    top: 10px; /* Отступ сверху */
+    left: 10px; /* Отступ слева */
+    width: 35px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый */
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2em;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+}
+
+.card-info {
+    padding: 10px;
+    text-align: center;
+}
+
+.card-name {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 3px;
+    font-size: 0.95em;
+}
+
+.card-rating {
+    font-size: 0.85em;
+    color: #555;
+}
+.card-rating i.fa-star {
+    color: var(--accent-yellow);
+}
+
+
+/* Стили страницы "Поиск" */
+#page-search .search-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 30px 15px;
+    background-color: var(--white);
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+#page-search h2 {
+    margin-bottom: 10px;
+}
+#page-search p {
+    margin-bottom: 20px;
+    color: #666;
+}
+
+#search-input {
+    width: 100%;
+    max-width: 400px;
+    padding: 12px 15px;
+    font-size: 1em;
+    border: 1px solid var(--border-color);
+    border-radius: 20px; /* Скругленные края */
+    margin-bottom: 15px;
+    text-align: center;
+}
+#search-input:focus {
+    outline: none;
+    border-color: var(--primary-pink);
+    box-shadow: 0 0 0 2px rgba(255, 192, 203, 0.4);
+}
+
+.search-button {
+    padding: 10px 25px;
+    font-size: 1em;
+    background-color: var(--primary-pink);
+    color: var(--text-color);
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+.search-button:hover {
+    background-color: #FFB6C1; /* Чуть темнее розовый при наведении */
+}
+
+
+/* Нижняя панель */
+.app-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--footer-height);
+    background-color: var(--white);
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 5px 0;
+    z-index: 1000;
+}
+
+.nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa; /* Неактивный цвет */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.75em;
+    padding: 5px;
+    transition: color 0.2s ease;
+}
+
+.nav-button i {
+    font-size: 1.6em; /* Размер иконки */
+    margin-bottom: 4px;
+}
+
+.nav-button.active {
+    color: var(--primary-pink); /* Активный цвет */
+}
+.nav-button:hover {
+     color: var(--text-color); /* Цвет при наведении */
+}
+
+
+/* Стили модального окна */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-color);
+    z-index: 1001; /* Над контентом, но под модалкой */
+    display: none; /* Скрыто по умолчанию */
+}
+
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--white);
+    border-radius: 12px;
+    padding: 25px;
+    z-index: 1002; /* Выше всего */
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh; /* Ограничение высоты */
+    overflow-y: auto; /* Прокрутка, если контента много */
+    display: none; /* Скрыто по умолчанию */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background: none;
+    border: none;
+    font-size: 2em;
+    line-height: 1;
+    color: #aaa;
+    cursor: pointer;
+}
+.modal-close:hover {
+    color: #333;
+}
+
+.modal-content .profile-header {
+    margin-bottom: 20px;
+}
+
+.modal-avatar {
+     width: 60px;
+     height: 60px;
+     border-color: var(--primary-pink);
+}
+
+.modal-name {
+    font-size: 1.3em;
+}
+.modal-rating {
+     font-size: 1em;
+     font-weight: bold;
+}
+.modal-rating i.fa-star {
+    color: var(--accent-yellow);
+}
+
+.modal-content h4 {
+     margin-bottom: 15px;
+     border-top: 1px solid var(--border-color);
+     padding-top: 15px;
+}
+/* Используем те же стили для отзывов, что и на странице профиля */
+.modal-reviews .review-item {
+    background-color: #f9f9f9; /* Слегка другой фон для отличия */
+}

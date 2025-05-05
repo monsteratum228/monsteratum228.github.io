@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DateChecker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="header-content">
+            <div class="avatar-container">
+                <img src="https://via.placeholder.com/40/E0E0E0/888888?text=?" alt="Avatar" class="avatar" id="header-avatar">
+                 <div class="rating">
+                    <i class="fas fa-star"></i>
+                    <span>4.9/5</span>
+                </div>
+            </div>
+            <div class="settings-icon">
+                <i class="fas fa-cog"></i>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section id="page-profile" class="page active">
+            <div class="profile-main-info">
+                <div class="profile-avatar-container">
+                     <img src="https://via.placeholder.com/80/E0E0E0/888888?text=?" alt="User Avatar" class="profile-avatar-large" id="profile-user-avatar">
+                     <div class="level-text-container" id="profile-level-text-container">
+                         Ур. <span id="profile-user-level">1</span>
+                     </div>
+                </div>
+                <h2 class="profile-name" id="profile-user-name">Загрузка...</h2>
+            </div>
+
+            <div class="rating-breakdown">
+                <h3>Рейтинг профиля</h3>
+                <div class="rating-grid">
+                    <div class="rating-item">
+                        <i class="fas fa-comments rating-icon chat"></i>
+                        <span>Переписка</span>
+                        <span class="rating-value">4.8 <i class="fas fa-star"></i></span>
+                    </div>
+                    <div class="rating-item">
+                        <i class="fas fa-calendar-check rating-icon date"></i>
+                        <span>Свидание</span>
+                        <span class="rating-value">4.9 <i class="fas fa-star"></i></span>
+                    </div>
+                    <div class="rating-item">
+                        <i class="fas fa-brain rating-icon personality"></i>
+                        <span>Личность</span>
+                        <span class="rating-value">5.0 <i class="fas fa-star"></i></span>
+                    </div>
+                    <div class="rating-item">
+                        <i class="fas fa-smile rating-icon" style="color: green;"></i>
+                        <span>Весело</span>
+                        <span class="rating-value">5.0 <i class="fas fa-star"></i></span>
+                    </div>
+                     <div class="rating-item overall">
+                        <i class="fas fa-shield-alt rating-icon overall"></i>
+                        <span>Общий</span>
+                        <span class="rating-value main-rating">4.9 <i class="fas fa-star"></i></span>
+                    </div>
+                </div>
+            </div>
+
+             <div class="reliability-scale">
+                <label for="reliability-bar">Надежность</label>
+                <div class="progress-bar-container" id="reliability-bar">
+                    <div class="progress-bar-fill reliability" style="width: 80%;"></div>
+                    <span class="progress-bar-text">80%</span>
+                </div>
+            </div>
+
+            <div class="xp-system">
+                <label for="xp-bar">Опыт профиля</label>
+                <div class="xp-bar-container" id="xp-bar">
+                    <div class="xp-bar-fill" id="profile-xp-bar" style="width: 0%;"></div>
+                    <span class="xp-text" id="xp-status-text">0 / 100 XP</span>
+                </div>
+            </div>
+
+             <button id="add-xp-button" class="test-button">Добавить <span id="xp-value-to-add">25</span> XP</button>
+
+            <hr class="profile-divider">
+
+            <div class="profile-actions">
+                <button class="action-button" data-action="show-reviews-history">
+                    <i class="fas fa-history action-icon"></i>
+                    <span>История отзывов</span>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
+                </button>
+                 <button class="action-button" data-action="show-reviews-my">
+                    <i class="fas fa-star action-icon"></i>
+                    <span>Отзывы на меня</span>
+                    <i class="fas fa-chevron-right arrow-icon"></i>
+                </button>
+                 <button class="action-button" data-action="show-achievements">
+                    <i class="fas fa-trophy action-icon"></i>
+                    <span>Достижения</span>
+                     <i class="fas fa-chevron-right arrow-icon"></i>
+                </button>
+                 <button class="action-button" data-action="show-referral">
+                    <i class="fas fa-users action-icon"></i>
+                    <span>Реферальная программа</span>
+                     <i class="fas fa-chevron-right arrow-icon"></i>
+                </button>
+                 <button class="action-button" data-action="show-partnership">
+                    <i class="fas fa-handshake action-icon"></i>
+                    <span>Партнерство</span>
+                     <i class="fas fa-chevron-right arrow-icon"></i>
+                </button>
+            </div>
+
+             <div class="profile-content-section" id="content-reviews-history">
+                <h4>Оставленные мной отзывы:</h4>
+                 <div class="review-item">
+                    <p><strong>Отзыв на Петра:</strong> "Отличная встреча, все прошло хорошо!"</p>
+                    <span><i class="fas fa-star"></i> 5.0</span> - <small>1 мая 2025</small>
+                </div>
+                 <div class="review-item">
+                    <p><strong>Отзыв на Марию:</strong> "Приятный собеседник."</p>
+                    <span><i class="fas fa-star"></i> 4.5</span> - <small>28 апр 2025</small>
+                </div>
+            </div>
+            <div class="profile-content-section" id="content-reviews-my">
+                <h4>Отзывы, оставленные на меня:</h4>
+                 <div class="review-item">
+                     <p><strong>От Ивана:</strong> "Все супер, рекомендую!"</p>
+                     <span><i class="fas fa-star"></i> 5.0</span> - <small>3 мая 2025</small>
+                </div>
+                 <div class="review-item">
+                    <p><strong>От Елены:</strong> "Немного опоздала, но в целом все хорошо."</p>
+                    <span><i class="fas fa-star"></i> 4.0</span> - <small>30 апр 2025</small>
+                </div>
+            </div>
+             <div class="profile-content-section" id="content-achievements">
+                <h4>Мои Достижения:</h4>
+                <p>Здесь будут отображаться ваши достижения...</p>
+             </div>
+              <div class="profile-content-section" id="content-referral">
+                <h4>Реферальная программа:</h4>
+                <p>Приглашайте друзей и получайте бонусы!</p>
+             </div>
+              <div class="profile-content-section" id="content-partnership">
+                <h4>Партнерство:</h4>
+                <p>Информация для партнеров.</p>
+             </div>
+
+        </section>
+
+        <section id="page-people" class="page">
+            <div class="people-grid">
+                <div class="profile-card" data-user-id="1">
+                    <div class="card-photo" style="background-image: url('https://source.unsplash.com/random/150x200?person&sig=1')"></div>
+                    <div class="card-avatar-placeholder"><i class="fas fa-user"></i></div>
+                    <div class="card-info">
+                        <span class="card-name">Екатерина С.</span>
+                        <span class="card-rating"><i class="fas fa-star"></i> 4.8</span>
+                    </div>
+                </div>
+                 <div class="profile-card" data-user-id="2">
+                    <div class="card-photo" style="background-image: url('https://source.unsplash.com/random/150x200?person&sig=2')"></div>
+                     <div class="card-avatar-placeholder"><i class="fas fa-user"></i></div>
+                     <div class="card-info">
+                        <span class="card-name">Дмитрий П.</span>
+                        <span class="card-rating"><i class="fas fa-star"></i> 4.5</span>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="3">
+                    <div class="card-photo" style="background-image: url('https://source.unsplash.com/random/150x200?person&sig=3')"></div>
+                     <div class="card-avatar-placeholder"><i class="fas fa-user"></i></div>
+                     <div class="card-info">
+                        <span class="card-name">Ольга В.</span>
+                        <span class="card-rating"><i class="fas fa-star"></i> 5.0</span>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="4">
+                    <div class="card-photo" style="background-image: url('https://source.unsplash.com/random/150x200?person&sig=4')"></div>
+                     <div class="card-avatar-placeholder"><i class="fas fa-user"></i></div>
+                     <div class="card-info">
+                        <span class="card-name">Максим Л.</span>
+                        <span class="card-rating"><i class="fas fa-star"></i> 4.2</span>
+                    </div>
+                </div>
+                 <div class="profile-card" data-user-id="5">
+                    <div class="card-photo" style="background-image: url('https://source.unsplash.com/random/150x200?person&sig=5')"></div>
+                     <div class="card-avatar-placeholder"><i class="fas fa-user"></i></div>
+                     <div class="card-info">
+                        <span class="card-name">Светлана К.</span>
+                        <span class="card-rating"><i class="fas fa-star"></i> 4.9</span>
+                    </div>
+                </div>
+                <div class="profile-card" data-user-id="6">
+                    <div class="card-photo" style="background-image: url('https://source.unsplash.com/random/150x200?person&sig=6')"></div>
+                     <div class="card-avatar-placeholder"><i class="fas fa-user"></i></div>
+                     <div class="card-info">
+                        <span class="card-name">Андрей Б.</span>
+                        <span class="card-rating"><i class="fas fa-star"></i> 4.7</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="page-search" class="page">
+            <div class="search-container">
+                <h2>Поиск пользователя</h2>
+                <p>Введите ссылку на профиль Telegram или username:</p>
+                <input type="text" id="search-input" placeholder="@username или t.me/username">
+                <button class="search-button">Найти</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="app-footer">
+         <button class="nav-button active" data-target="page-profile">
+            <i class="fas fa-user"></i>
+            <span>Профиль</span>
+        </button>
+        <button class="nav-button" data-target="page-people">
+            <i class="fas fa-users"></i>
+            <span>Люди</span>
+        </button>
+        <button class="nav-button" data-target="page-search">
+            <i class="fas fa-search"></i>
+            <span>Поиск</span>
+        </button>
+    </footer>
+
+    <div id="modal-overlay" class="modal-overlay"></div>
+    <div id="profile-modal" class="modal">
+         <button class="modal-close" id="modal-close-button">&times;</button>
+        <div class="modal-content">
+             <div class="profile-header">
+                <img src="" alt="User Avatar" class="profile-avatar-large modal-avatar">
+                <div class="profile-info">
+                    <h2 class="profile-name modal-name">Имя Фамилия</h2>
+                    <span class="modal-rating"><i class="fas fa-star"></i> 0.0</span>
+                </div>
+            </div>
+            <h4>Отзывы на пользователя:</h4>
+            <div class="modal-reviews">
+                <div class="review-item">
+                    <p><strong>От Ивана:</strong> "Прекрасный человек!"</p>
+                    <span><i class="fas fa-star"></i> 5.0</span> - <small>4 мая 2025</small>
+                </div>
+                <div class="review-item">
+                    <p><strong>От Марии:</strong> "Все прошло гладко."</p>
+                    <span><i class="fas fa-star"></i> 4.5</span> - <small>1 мая 2025</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
