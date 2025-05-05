@@ -757,6 +757,9 @@ body {
 .nav-button:hover {
      color: var(--text-color); /* Цвет при наведении */
 }
+.nav-button span {
+    font-family: var(--font-main);
+}
 /* Стили модального окна */
 .modal-overlay {
     position: fixed;
