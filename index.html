@@ -22,8 +22,13 @@
                     <span>4.9/5</span>
                 </div>
             </div>
-            <div class="settings-icon">
-                <i class="fas fa-cog"></i>
+            <div class="header-icons"> <div class="settings-icon header-icon" data-modal-target="modal-settings" title="Настройки">
+                    <i class="fas fa-cog"></i>
+                </div>
+                <div class="notification-icon-container header-icon" title="Уведомления">
+                     <i class="fas fa-bell"></i>
+                     <span class="notification-badge">1</span>
+                </div>
             </div>
         </div>
     </header>
@@ -89,74 +94,54 @@
 
              <button id="add-xp-button" class="test-button">Добавить <span id="xp-value-to-add">25</span> XP</button>
 
-            <hr class="profile-divider">
+            <hr class="profile-divider" >
 
             <div class="profile-actions">
-                <button class="action-button" data-action="show-reviews-history">
-                    <i class="fas fa-history action-icon"></i>
+                <button class="action-button" data-target="page-reviews-history"> <i class="fas fa-history action-icon"></i>
                     <span>История отзывов</span>
-                    <i class="fas fa-chevron-right arrow-icon"></i>
-                </button>
-                 <button class="action-button" data-action="show-reviews-my">
-                    <i class="fas fa-star action-icon"></i>
+                    </button>
+                 <button class="action-button" data-target="page-my-reviews"> <i class="fas fa-star action-icon"></i>
                     <span>Отзывы на меня</span>
-                    <i class="fas fa-chevron-right arrow-icon"></i>
-                </button>
-                </div>
-
-            <div class="profile-content-section" id="content-reviews-history">
-                <h4>Оставленные мной отзывы:</h4>
-                <div class="review-item">
-                     <div class="review-header">
-                         <img src="https://via.placeholder.com/30/7B3F00/FFFFFF?text=П" alt="Аватар" class="review-avatar">
-                         <div class="review-info">
-                            <p><strong>Отзыв на Петра:</strong> "Отличная встреча, все прошло хорошо!"</p>
-                            <div class="review-meta">
-                                <span><i class="fas fa-star"></i> 5.0</span> - <small>1 мая 2025</small>
-                            </div>
-                         </div>
-                     </div>
-                </div>
-                 <div class="review-item">
-                    <div class="review-header">
-                         <img src="https://via.placeholder.com/30/FF69B4/FFFFFF?text=М" alt="Аватар" class="review-avatar">
-                         <div class="review-info">
-                            <p><strong>Отзыв на Марию:</strong> "Приятный собеседник."</p>
-                            <div class="review-meta">
-                                <span><i class="fas fa-star"></i> 4.5</span> - <small>28 апр 2025</small>
-                            </div>
-                         </div>
-                     </div>
-                </div>
-            </div>
-            <div class="profile-content-section" id="content-reviews-my">
-                <h4>Отзывы, оставленные на меня:</h4>
-                 <div class="review-item">
-                    <div class="review-header">
-                        <img src="https://via.placeholder.com/30/4682B4/FFFFFF?text=И" alt="Аватар" class="review-avatar">
-                        <div class="review-info">
-                            <p><strong>От Ивана:</strong> "Все супер, рекомендую!"</p>
-                            <div class="review-meta">
-                                <span><i class="fas fa-star"></i> 5.0</span> - <small>3 мая 2025</small>
-                            </div>
-                        </div>
-                    </div>
-                 </div>
-                 <div class="review-item">
-                      <div class="review-header">
-                        <img src="https://via.placeholder.com/30/8A2BE2/FFFFFF?text=Е" alt="Аватар" class="review-avatar">
-                        <div class="review-info">
-                            <p><strong>От Елены:</strong> "Немного опоздала, но в целом все хорошо."</p>
-                            <div class="review-meta">
-                                <span><i class="fas fa-star"></i> 4.0</span> - <small>30 апр 2025</small>
-                             </div>
-                        </div>
-                     </div>
-                 </div>
+                     </button>
             </div>
 
         </section>
+        <section id="page-my-reviews" class="page">
+            <h2>Отзывы обо мне</h2>
+            <div class="review-stats-container">
+                <div class="stats-summary">
+                    <span id="my-reviews-count">Всего отзывов: 0</span> |
+                    <span id="my-reviews-avg-rating">Средний рейтинг: 0.0</span>
+                </div>
+                <div class="rating-balance-scale-container">
+                    <span class="scale-label left">0.0 <i class="fas fa-frown"></i></span>
+                    <div class="rating-balance-scale">
+                        <div class="scale-indicator" id="my-rating-indicator" style="left: 50%;"></div>
+                    </div>
+                    <span class="scale-label right"><i class="fas fa-smile"></i> 5.0</span>
+                </div>
+            </div>
+            <hr>
+            <div class="review-list" id="my-reviews-list">
+                <p class="loading-placeholder">Загрузка отзывов...</p>
+            </div>
+        </section>
 
+        <section id="page-reviews-history" class="page">
+             <h2>Оставленные мной отзывы</h2>
+             <div class="review-stats-container">
+                <div class="stats-summary">
+                     <span id="history-reviews-count">Всего оставлено: 0</span>
+                </div>
+                <div class="star-rating-summary" id="history-star-summary">
+                    <p class="loading-placeholder">Загрузка статистики...</p>
+                </div>
+             </div>
+             <hr>
+            <div class="review-list" id="reviews-history-list">
+                 <p class="loading-placeholder">Загрузка истории...</p>
+            </div>
+        </section>
         <section id="page-people" class="page">
             <div class="people-grid">
                 <div class="profile-card" data-user-id="1">
@@ -229,7 +214,7 @@
                     <span>Настройки</span>
                 </button>
                  <button class="action-button" data-modal-target="modal-support">
-                    <i class="fas fa-life-ring action-icon"></i>
+                    <i class="fas fa-headset action-icon"></i>
                     <span>Поддержка</span>
                 </button>
                  </div>

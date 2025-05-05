@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const xpTextElement = document.getElementById('xp-status-text');
     const addXpButton = document.getElementById('add-xp-button');
     const xpValueSpan = document.getElementById('xp-value-to-add'); // Span с числом XP для кнопки
-    const profileActionButtons = document.querySelectorAll('#page-profile .action-button');
-    const profileContentSections = document.querySelectorAll('#page-profile .profile-content-section');
+    const profileActionButtons = document.querySelectorAll('.profile-actions .action-button[data-action]');
+    const profileContentSections = document.querySelectorAll('.page'); // Ищем все секции с классом page
 
     const menuPage = document.getElementById('page-menu'); // Контейнер страницы Меню
      // Элементы нового универсального модального окна
@@ -33,11 +33,40 @@ document.addEventListener('DOMContentLoaded', () => {
      const genericModalCloseButton = document.getElementById('generic-modal-close-button');
      const genericModalTitle = document.getElementById('generic-modal-title');
      const genericModalContent = document.getElementById('generic-modal-content');
+     const headerIconsContainer = document.querySelector('.header-icons'); // Контейнер иконок хедера
+     // Элементы страницы "Отзывы на меня"
+     const myReviewsCountSpan = document.getElementById('my-reviews-count');
+     const myReviewsAvgRatingSpan = document.getElementById('my-reviews-avg-rating');
+     const myRatingIndicator = document.getElementById('my-rating-indicator');
+     const myReviewsListContainer = document.getElementById('my-reviews-list');
+     // Элементы страницы "История отзывов"
+     const historyReviewsCountSpan = document.getElementById('history-reviews-count');
+     const historyStarSummaryContainer = document.getElementById('history-star-summary');
+     const reviewsHistoryListContainer = document.getElementById('reviews-history-list');
+ 
  
  
     // --- Инициализация Telegram Web App ---
     let tgUser = {}; // Объект для данных пользователя TG
     let userId = 'guest'; // ID пользователя
+    const mockMyReviews = [
+        { id: 1, reviewer: "Иван П.", avatar: `https://via.placeholder.com/30/4682B4/FFFFFF?text=И`, rating: 5.0, text: "Все супер, рекомендую!", date: "2025-05-03" },
+        { id: 2, reviewer: "Елена В.", avatar: `https://via.placeholder.com/30/8A2BE2/FFFFFF?text=Е`, rating: 4.0, text: "Немного опоздала, но в целом все хорошо.", date: "2025-04-30" },
+        { id: 3, reviewer: "Сергей М.", avatar: `https://via.placeholder.com/30/008080/FFFFFF?text=С`, rating: 5.0, text: "Отлично пообщались!", date: "2025-04-25" },
+        { id: 4, reviewer: "Ольга К.", avatar: `https://via.placeholder.com/30/FF6347/FFFFFF?text=О`, rating: 4.5, text: "Приятная девушка, все понравилось.", date: "2025-04-22" },
+        { id: 5, reviewer: "Петр Л.", avatar: `https://via.placeholder.com/30/7B3F00/FFFFFF?text=П`, rating: 3.5, text: "Не очень понял юмора, но в целом ок.", date: "2025-04-20" },
+        { id: 6, reviewer: "Мария Д.", avatar: `https://via.placeholder.com/30/FF69B4/FFFFFF?text=М`, rating: 5.0, text: "Лучшая встреча!", date: "2025-04-15" },
+    ];
+    // Отзывы, ОСТАВЛЕННЫЕ МНОЙ (для page-reviews-history)
+    const mockReviewsHistory = [
+         { id: 10, targetUser: "Петр Л.", avatar: `https://via.placeholder.com/30/7B3F00/FFFFFF?text=П`, rating: 5.0, text: "Отличная встреча, все прошло хорошо!", date: "2025-05-01" },
+         { id: 11, targetUser: "Мария К.", avatar: `https://via.placeholder.com/30/FF69B4/FFFFFF?text=М`, rating: 4.5, text: "Приятный собеседник.", date: "2025-04-28" },
+         { id: 12, targetUser: "Дмитрий С.", avatar: `https://via.placeholder.com/30/556B2F/FFFFFF?text=Д`, rating: 4.0, text: "Нормально посидели.", date: "2025-04-26" },
+         { id: 13, targetUser: "Анна В.", avatar: `https://via.placeholder.com/30/DC143C/FFFFFF?text=А`, rating: 5.0, text: "Очень интересно было!", date: "2025-04-18" },
+         { id: 14, targetUser: "Екатерина Ж.", avatar: `https://via.placeholder.com/30/FFD700/FFFFFF?text=Е`, rating: 5.0, text: "Рекомендую!", date: "2025-04-10" },
+         { id: 15, targetUser: "Михаил П.", avatar: `https://via.placeholder.com/30/191970/FFFFFF?text=М`, rating: 3.0, text: "Скучновато.", date: "2025-04-05" },
+    ];
+
     try {
         if (window.Telegram && window.Telegram.WebApp) {
             const tg = window.Telegram.WebApp;
@@ -225,38 +254,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Кнопки действий в профиле ---
-    profileActionButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const action = button.getAttribute('data-action');
-            const targetContentIdMap = {
-                'show-reviews-history': 'content-reviews-history',
-                'show-reviews-my': 'content-reviews-my',
-                'show-achievements': 'content-achievements',
-                'show-referral': 'content-referral',
-                'show-partnership': 'content-partnership',
-            };
-            const targetId = targetContentIdMap[action];
-
-            // Скрываем все секции контента
-            profileContentSections.forEach(section => section.classList.remove('visible'));
-
-            if (targetId) {
-                const targetSection = document.getElementById(targetId);
-                if (targetSection) {
-                    // Показываем нужную секцию
-                    targetSection.classList.add('visible');
-                    console.log(`Action: ${action}, showing section: ${targetId}`);
-                     // Можно добавить прокрутку к началу секции
-                    // targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                } else {
-                    console.log(`Action: ${action}, no target section found.`);
-                }
-            } else {
-                 console.log(`Action: ${action} - No content section defined.`);
-                 // Здесь можно добавить обработку для действий без контентных секций
+    document.querySelectorAll('.profile-actions .action-button[data-target]').forEach(button => {
+        button.addEventListener('click', function() {
+          const targetId = this.getAttribute('data-target');
+          
+          // 1. Скрываем все страницы
+          document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active');
+          });
+          
+          // 2. Показываем нужную страницу
+          const targetPage = document.getElementById(targetId);
+          if (targetPage) {
+            targetPage.classList.add('active');
+            
+            // 3. Загружаем данные если нужно
+            if (targetId === 'page-my-reviews') {
+              populateMyReviewsPage();
+            } else if (targetId === 'page-reviews-history') {
+              populateReviewsHistoryPage();
             }
+          }
         });
-    });
+      });
 
 
     // --- Навигация по нижним кнопкам (без изменений) ---
@@ -295,6 +315,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+    function openGenericModal(modalId, title, contentHTML) {
+        console.log(`Opening generic modal: ${modalId}`);
+        if (genericModalTitle) genericModalTitle.textContent = title;
+        if (genericModalContent) genericModalContent.innerHTML = contentHTML;
+        if (genericModalOverlay) genericModalOverlay.style.display = 'block';
+        if (genericModal) genericModal.style.display = 'block';
+        document.body.style.overflow = 'hidden';
+   }
     // --- Обработка кнопок в МЕНЮ (открытие универсальной модалки) ---
     if (menuPage) {
         menuPage.addEventListener('click', (event) => {
@@ -363,6 +391,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (genericModalOverlay) genericModalOverlay.style.display = 'block';
             if (genericModal) genericModal.style.display = 'block';
             document.body.style.overflow = 'hidden'; // Блокируем скролл фона
+            openGenericModal(modalTargetId, title, contentHTML);
         });
     }
 
@@ -370,29 +399,44 @@ document.addEventListener('DOMContentLoaded', () => {
     function closeGenericModal() {
         if (genericModalOverlay) genericModalOverlay.style.display = 'none';
         if (genericModal) genericModal.style.display = 'none';
-        document.body.style.overflow = ''; // Возвращаем скролл фона
+        document.body.style.overflow = '';
     }
     if (genericModalCloseButton) genericModalCloseButton.addEventListener('click', closeGenericModal);
     if (genericModalOverlay) genericModalOverlay.addEventListener('click', closeGenericModal);
 
-
-    // --- Навигация по нижним кнопкам (Обновлено) ---
+    // --- Навигация по нижним кнопкам (Обновлено для загрузки данных страниц отзывов) ---
     navButtons.forEach(button => {
         button.addEventListener('click', () => {
             const targetPageId = button.getAttribute('data-target');
+            const previousActivePage = document.querySelector('.page.active'); // Запоминаем текущую страницу
 
             // Скрываем все страницы
             pages.forEach(page => page.classList.remove('active'));
-             // Показываем нужную страницу
+
+            // Показываем нужную страницу
             const targetPage = document.getElementById(targetPageId);
             if (targetPage) {
                  targetPage.classList.add('active');
-                 // Скрываем все открытые секции контента в профиле, если уходим с него
-                 if (targetPageId !== 'page-profile') {
-                     profileContentSections.forEach(section => section.classList.remove('visible'));
+                 closeGenericModal(); // Закрываем модалки при переходе
+
+                 // === ЗАГРУЗКА ДАННЫХ ДЛЯ СТРАНИЦ ОТЗЫВОВ ===
+                 if (targetPageId === 'page-my-reviews' && (!myReviewsListContainer.dataset.loaded || previousActivePage?.id !== targetPageId)) {
+                      console.log("Loading data for page-my-reviews");
+                      populateMyReviewsPage();
+                      myReviewsListContainer.dataset.loaded = "true"; // Отмечаем, что загрузили
+                 } else if (targetPageId === 'page-reviews-history' && (!reviewsHistoryListContainer.dataset.loaded || previousActivePage?.id !== targetPageId)) {
+                      console.log("Loading data for page-reviews-history");
+                      populateReviewsHistoryPage();
+                      reviewsHistoryListContainer.dataset.loaded = "true"; // Отмечаем, что загрузили
                  }
-                 // Закрываем универсальную модалку, если она была открыта
-                 closeGenericModal();
+
+            } else {
+                 console.error(`Target page not found: ${targetPageId}`);
+                 // Вернуть на профиль, если страница не найдена
+                 document.getElementById('page-profile')?.classList.add('active');
+                 navButtons.forEach(btn => btn.classList.remove('active'));
+                 document.querySelector('.nav-button[data-target="page-profile"]')?.classList.add('active');
+                 return; // Выходим, чтобы не сбросить активную кнопку
             }
 
             // Обновляем активное состояние кнопок
@@ -400,25 +444,142 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
         });
     });
+    function populateMyReviewsPage() {
+        if (!myReviewsListContainer || !myReviewsCountSpan || !myReviewsAvgRatingSpan || !myRatingIndicator) return;
+
+        myReviewsListContainer.innerHTML = ''; // Очищаем предыдущие отзывы
+
+        if (mockMyReviews.length === 0) {
+             myReviewsCountSpan.textContent = 'Всего отзывов: 0';
+             myReviewsAvgRatingSpan.textContent = 'Средний рейтинг: -';
+             myRatingIndicator.style.left = '50%'; // По центру, если нет рейтинга
+             myReviewsListContainer.innerHTML = '<p class="loading-placeholder">Пока нет ни одного отзыва.</p>';
+            return;
+        }
+
+        let totalRating = 0;
+        mockMyReviews.forEach(review => {
+            totalRating += review.rating;
+            myReviewsListContainer.innerHTML += createReviewItemHTML(review, false); // false - не история
+        });
+
+        const averageRating = totalRating / mockMyReviews.length;
+        myReviewsCountSpan.textContent = `Всего отзывов: ${mockMyReviews.length}`;
+        myReviewsAvgRatingSpan.textContent = `Средний рейтинг: ${averageRating.toFixed(1)}`;
+
+        // Обновляем положение индикатора на шкале (от 0% до 100%)
+        const indicatorPosition = (averageRating / 5) * 100;
+        myRatingIndicator.style.left = `${Math.max(0, Math.min(100, indicatorPosition))}%`;
+    }
+
+    /** Заполняет страницу "История отзывов" */
+    function populateReviewsHistoryPage() {
+         if (!reviewsHistoryListContainer || !historyReviewsCountSpan || !historyStarSummaryContainer) return;
+
+         reviewsHistoryListContainer.innerHTML = ''; // Очищаем
+
+         if (mockReviewsHistory.length === 0) {
+             historyReviewsCountSpan.textContent = 'Всего оставлено: 0';
+             historyStarSummaryContainer.innerHTML = '<p class="loading-placeholder">Вы еще не оставляли отзывы.</p>';
+             reviewsHistoryListContainer.innerHTML = '<p class="loading-placeholder">Нет оставленных отзывов.</p>';
+             return;
+         }
+
+         const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+         mockReviewsHistory.forEach(review => {
+             const roundedRating = Math.round(review.rating); // Округляем для статистики
+             if (roundedRating >= 1 && roundedRating <= 5) {
+                 starCounts[roundedRating]++;
+             }
+             reviewsHistoryListContainer.innerHTML += createReviewItemHTML(review, true); // true - это история
+         });
+
+         historyReviewsCountSpan.textContent = `Всего оставлено: ${mockReviewsHistory.length}`;
+
+         // Генерируем HTML для статистики по звездам
+         let summaryHTML = '';
+         for (let i = 5; i >= 1; i--) {
+             if (starCounts[i] > 0) { // Показываем только те, что есть
+                  summaryHTML += `
+                     <div class="star-rating-line">
+                         <span class="star-icons">${'<i class="fas fa-star"></i>'.repeat(i)}</span>
+                         <span class="star-label">${i} ${i > 1 && i < 5 ? 'звезды' : 'звезд'}:</span>
+                         <span class="star-count">${starCounts[i]}</span>
+                     </div>
+                 `;
+             }
+         }
+         historyStarSummaryContainer.innerHTML = summaryHTML || '<p class="loading-placeholder">Нет данных для статистики.</p>';
+    }
+
+    /** Генерирует HTML для одного элемента отзыва */
+    function createReviewItemHTML(review, isHistory) {
+         const title = isHistory ? `Отзыв на ${review.targetUser}:` : `От ${review.reviewer}:`;
+         const avatar = review.avatar || `https://via.placeholder.com/30/${getRandomColor()}/FFFFFF?text=?`;
+         const rating = review.rating.toFixed(1);
+         const date = new Date(review.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric'});
+
+          return `
+             <div class="review-item">
+                 <div class="review-header">
+                      <img src="${avatar}" alt="Аватар" class="review-avatar">
+                      <div class="review-info">
+                         <p><strong>${title}</strong> "${review.text}"</p>
+                         <div class="review-meta">
+                             <span><i class="fas fa-star"></i> ${rating}</span>
+                             <small>${date}</small>
+                         </div>
+                      </div>
+                  </div>
+             </div>
+         `;
+    }
+    if (headerIconsContainer) {
+        headerIconsContainer.addEventListener('click', (event) => {
+             const targetElement = event.target.closest('.header-icon');
+             if (!targetElement) return;
+
+             // Клик по иконке Настроек
+             if (targetElement.classList.contains('settings-icon')) {
+                 const modalTargetId = targetElement.getAttribute('data-modal-target');
+                 if (modalTargetId === 'modal-settings') {
+                    // Генерируем контент и открываем модалку Настроек
+                    const title = 'Настройки';
+                    const contentHTML = `
+                         <h4>Настройки приложения</h4>
+                         <p>Здесь скоро появятся настройки уведомлений, приватности и другие опции.</p>
+                         <label><input type="checkbox" checked> Получать уведомления об отзывах</label><br>
+                         <label><input type="checkbox"> Скрывать профиль от незнакомцев</label>
+                     `;
+                     openGenericModal(modalTargetId, title, contentHTML);
+                 }
+             }
+             // Клик по иконке Уведомлений
+             else if (targetElement.classList.contains('notification-icon-container')) {
+                  console.log("Notifications clicked!");
+                  // TODO: Реализовать показ окна/списка уведомлений
+                  // Например, открыть модалку с другим контентом:
+                  // openGenericModal('modal-notifications', 'Уведомления', '<ul><li>Новый отзыв от Ивана!</li></ul>');
+                  // Или скрыть бэдж:
+                  const badge = targetElement.querySelector('.notification-badge');
+                  if (badge) badge.style.display = 'none'; // Скрыть бэдж при клике
+             }
+        });
+    }
 
     // --- Открытие/закрытие модального окна ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ (обновлен вызов генерации отзывов) ---
     if (peopleGrid) {
         peopleGrid.addEventListener('click', (event) => {
             const card = event.target.closest('.profile-card');
-            if (card) {
-                const userId = card.getAttribute('data-user-id');
+            if (card) { /* ... получение данных карточки ... */
                 const cardName = card.querySelector('.card-name').textContent;
                 const cardRating = card.querySelector('.card-rating').innerHTML;
-                const cardPhoto = card.querySelector('.card-photo').style.backgroundImage;
-                const cardAvatarSrc = card.querySelector('.card-avatar-placeholder i')
-                                        ? `https://via.placeholder.com/60/${getRandomColor()}/FFFFFF?text=${cardName.charAt(0)}`
-                                        : card.querySelector('.card-avatar-placeholder img')?.src;
+                const cardAvatarSrc = `https://via.placeholder.com/60/${getRandomColor()}/FFFFFF?text=${cardName.charAt(0)}`; // Пример
 
-                modalAvatar.src = cardAvatarSrc || `https://via.placeholder.com/60/${getRandomColor()}/FFFFFF?text=${cardName.charAt(0)}`;
+                modalAvatar.src = cardAvatarSrc;
                 modalName.textContent = cardName;
                 modalRating.innerHTML = cardRating;
-                // Генерируем отзывы С АВАТАРАМИ для модалки
-                modalReviewsContainer.innerHTML = generateFakeReviewsWithAvatars(cardName);
+                modalReviewsContainer.innerHTML = generateFakeReviewsWithAvatarsForModal(cardName); // Используем старую функцию для модалки (или переделать на createReviewItemHTML)
 
                 modalOverlay.style.display = 'block';
                 profileModal.style.display = 'block';
@@ -426,65 +587,30 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
-    function closeModal() {
+    function closeModal() { /* ... */
         modalOverlay.style.display = 'none';
         profileModal.style.display = 'none';
         document.body.style.overflow = '';
     }
     if (modalCloseButton) modalCloseButton.addEventListener('click', closeModal);
-    if (modalOverlay) {
-         // Важно: не закрывать универсальную модалку при клике на оверлей модалки профиля
-         modalOverlay.addEventListener('click', (event) => {
-             if (event.target === modalOverlay) { // Закрывать только если клик был именно по этому оверлею
-                 closeModal();
-             }
-         });
+    if (modalOverlay) modalOverlay.addEventListener('click', (event) => { if (event.target === modalOverlay) closeModal(); });
+    function generateFakeReviewsWithAvatarsForModal(userName) {
+        let reviewsHtml = '';
+        const numReviews = Math.floor(Math.random() * 3) + 1; // 1-3 отзыва в модалке
+        for (let i=0; i<numReviews; i++){
+             const fakeReview = mockMyReviews[Math.floor(Math.random() * mockMyReviews.length)]; // Берем случайный из моковых
+             reviewsHtml += createReviewItemHTML({
+                 ...fakeReview, // Копируем данные
+                 text: `Случайный отзыв про ${userName}... ${fakeReview.text.substring(0,20)}...` // Делаем текст чуть другим
+             }, false); // false - не история
+        }
+        return reviewsHtml || '<p>Отзывов пока нет.</p>';
     }
     // --- Вспомогательные функции (без изменений) ---
     // --- Вспомогательные функции ---
     function getRandomColor() {
         return Math.floor(Math.random()*16777215).toString(16).padStart(6, '0');
     }
-
-    function generateFakeReviewsWithAvatars(userName) {
-        const fakeReviewers = ["Иван П.", "Мария К.", "Алексей С.", "Елена В.", "Дмитрий Р."];
-        const fakeComments = [
-            `Отличная встреча с ${userName}! Все прошло супер.`,
-            `Приятно было пообщаться с ${userName}. Рекомендую!`,
-            `${userName} немного опоздал(а), но в целом все хорошо.`,
-            `Вежливый и интересный собеседник ${userName}.`,
-            `Все отлично, ${userName} молодец!`
-        ];
-        const numReviews = Math.floor(Math.random() * 4) + 2;
-        let reviewsHtml = '';
-        for (let i = 0; i < numReviews; i++) {
-            const reviewer = fakeReviewers[Math.floor(Math.random() * fakeReviewers.length)];
-            const comment = fakeComments[Math.floor(Math.random() * fakeComments.length)];
-            const rating = (Math.random() * 1.5 + 3.5).toFixed(1);
-            const date = new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000);
-            const formattedDate = date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric'});
-            // Генерируем плейсхолдер аватара для ревьюера
-            const reviewerInitial = reviewer.split(' ')[0].charAt(0) || '?';
-            const avatarPlaceholder = `https://via.placeholder.com/30/${getRandomColor()}/FFFFFF?text=${reviewerInitial}`;
-
-            reviewsHtml += `
-                <div class="review-item">
-                    <div class="review-header">
-                         <img src="${avatarPlaceholder}" alt="Аватар ${reviewer}" class="review-avatar">
-                         <div class="review-info">
-                            <p><strong>От ${reviewer}:</strong> "${comment}"</p>
-                            <div class="review-meta">
-                                <span><i class="fas fa-star"></i> ${rating}</span>
-                                <small>${formattedDate}</small>
-                            </div>
-                         </div>
-                     </div>
-                </div>
-            `;
-        }
-        return reviewsHtml || '<p>Отзывов пока нет.</p>';
-    }
-
      // ... (анимация shake) ...
      const styleSheet = document.createElement("style");
      styleSheet.type = "text/css";

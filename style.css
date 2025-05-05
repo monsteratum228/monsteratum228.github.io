@@ -17,6 +17,11 @@
     --overlay-color: rgba(0, 0, 0, 0.6);
     --header-height: 60px;
     --footer-height: 65px;
+    --red: #F44336;
+     --orange: #FF9800;
+     --yellow: #FFEB3B;
+     --light-green: #CDDC39;
+     --green: #4CAF50;
 
     /* Шрифты */
     --font-main: 'Nunito', sans-serif; /* Новый шрифт */
@@ -49,7 +54,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between; /* Размещаем элементы по краям */
-    padding: 0 15px;
+    padding: 0 10px 0 15px;
     z-index: 1000;
 }
 
@@ -59,7 +64,43 @@ body {
     align-items: center;
     width: 100%;
 }
+.header-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px; /* Расстояние между иконками */
+}
 
+.header-icon {
+    position: relative; /* Для позиционирования бэджа */
+    cursor: pointer;
+}
+.header-icon i {
+    font-size: 1.4em;
+    color: var(--text-color);
+    display: block; /* Убирает лишние отступы под иконкой */
+}
+.header-icon:hover i {
+    color: var(--primary-pink);
+}
+
+/* Бэдж уведомлений */
+.notification-badge {
+    position: absolute;
+    top: -6px;  /* Положение */
+    right: -8px;
+    background-color: var(--red);
+    color: white;
+    border-radius: 50%;
+    width: 17px; /* Размер */
+    height: 17px;
+    font-size: 0.75em; /* Размер цифры */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    border: 1px solid var(--white); /* Обводка */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
 .avatar-container {
     position: relative; /* Для позиционирования рейтинга */
     display: flex;
@@ -76,7 +117,7 @@ body {
 
 .rating {
     position: absolute;
-    bottom: -2px;
+    bottom: -9px;
     right: -8px;
     background-color: var(--white);
     border-radius: 10px;
@@ -112,7 +153,9 @@ body {
 .page.active {
     display: block; /* Показываем активную страницу */
 }
-
+.page.visible {
+    display: block !important;
+  }
 /* Стили страницы "Профиль" */
 #page-profile .profile-actions {
     display: flex;
@@ -127,7 +170,7 @@ body {
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--primary-pink);
-    margin-right: 15px;
+    margin-right: 0px;
 }
 
 .profile-info .profile-name {
@@ -829,4 +872,123 @@ body {
 }
 #generic-modal-content p {
     margin-bottom: 10px;
+}
+#page-my-reviews, #page-reviews-history {
+    padding: 20px 15px;
+}
+#page-my-reviews h2, #page-reviews-history h2 {
+     text-align: center;
+     margin-bottom: 25px;
+     font-size: 1.5em;
+     color: var(--text-light);
+}
+
+.review-stats-container {
+    background-color: var(--white);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.stats-summary {
+    text-align: center;
+    font-size: 0.95em;
+    color: var(--text-light);
+    margin-bottom: 15px;
+}
+.stats-summary span {
+    margin: 0 5px;
+    font-weight: 600;
+}
+
+/* Шкала баланса рейтинга */
+.rating-balance-scale-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+.scale-label {
+    font-size: 0.9em;
+    color: #aaa;
+    white-space: nowrap;
+}
+.scale-label i { margin: 0 3px; }
+.scale-label.left i { color: var(--red); }
+.scale-label.right i { color: var(--green); }
+
+.rating-balance-scale {
+    flex-grow: 1;
+    height: 10px; /* Высота шкалы */
+    background: linear-gradient(to right, var(--red), var(--orange), var(--yellow), var(--light-green), var(--green));
+    border-radius: 5px;
+    position: relative;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+}
+
+.scale-indicator {
+    position: absolute;
+    bottom: -8px; /* Положение под шкалой */
+    width: 2px; /* Ширина маркера */
+    height: 18px; /* Высота маркера */
+    background-color: var(--text-color);
+    border-radius: 1px;
+    transform: translateX(-50%); /* Центрируем маркер */
+    transition: left 0.5s ease-out; /* Анимация */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+/* Альтернативный вид маркера - треугольник */
+/* .scale-indicator {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid var(--text-color);
+    transform: translateX(-50%);
+    transition: left 0.5s ease-out;
+} */
+
+
+/* Статистика по звездам */
+.star-rating-summary {
+    margin-top: 10px;
+}
+.star-rating-line {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 0.95em;
+    border-bottom: 1px dashed var(--border-color);
+}
+.star-rating-line:last-child {
+    border-bottom: none;
+}
+.star-icons i {
+    color: var(--accent-yellow);
+    margin-right: 2px;
+}
+.star-label {
+    color: var(--text-light);
+}
+.star-count {
+    font-weight: bold;
+    min-width: 30px; /* Чтобы цифры не прыгали */
+    text-align: right;
+}
+
+/* Список отзывов */
+.review-list {
+    margin-top: 20px;
+}
+.loading-placeholder {
+    text-align: center;
+    color: #aaa;
+    padding: 20px;
+    font-style: italic;
 }
