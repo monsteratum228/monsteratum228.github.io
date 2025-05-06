@@ -490,11 +490,69 @@ body {
     border-bottom: 1px dashed var(--border-color);
 }
 .review-item {
-    background-color: var(--white); /* Вернем белый фон */
+    background-color: var(--white);
     padding: 12px;
     border-radius: 8px;
     margin-bottom: 10px;
     border: 1px solid var(--border-color);
+    position: relative; /* Для позиционирования кнопки опций */
+}
+
+/* Кнопка опций (три точки) */
+.review-options-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    padding: 5px; /* Увеличим область клика */
+    line-height: 1; /* Убирает лишние отступы */
+    z-index: 5; /* Чтобы была над контентом, но под меню */
+}
+.review-options-button i {
+    font-size: 1.1em;
+    color: var(--text-light);
+}
+.review-options-button:hover i {
+    color: var(--text-color);
+}
+
+/* Выпадающее меню опций */
+.review-options-menu {
+    position: absolute;
+    top: 28px; /* Под кнопкой */
+    right: 0;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    z-index: 10; /* Выше кнопки опций */
+    display: none; /* Скрыто по умолчанию */
+    min-width: 180px; /* Минимальная ширина меню */
+}
+.review-options-menu.active { /* Класс для показа меню */
+    display: block;
+}
+.review-options-menu ul {
+    list-style: none;
+    padding: 5px 0; /* Отступы внутри меню */
+    margin: 0;
+}
+.review-options-menu li {
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: var(--text-color);
+    display: flex; /* Для иконок в меню */
+    align-items: center;
+}
+.review-options-menu li i {
+    margin-right: 10px;
+    color: var(--text-light);
+    width: 16px; /* Фиксированная ширина для иконок */
+    text-align: center;
+}
+.review-options-menu li:hover {
+    background-color: var(--soft-beige);
 }
 .review-header {
     display: flex;
@@ -518,7 +576,8 @@ body {
 
 .review-info p {
     margin-bottom: 5px; /* Отступ от текста до мета-данных */
-    line-height: 1.4; /* Межстрочный интервал для текста отзыва */
+    line-height: 1.4;
+    padding-right: 25px; /* Межстрочный интервал для текста отзыва */
 }
 .review-info strong { /* Имя пользователя/источник */
     color: var(--text-color);
@@ -531,6 +590,15 @@ body {
     align-items: center;
     gap: 8px; /* Расстояние между звездой и датой */
 }
+.review-actions {
+    display: flex;
+    justify-content: flex-end; /* Лайк справа */
+    align-items: center;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--border-color); /* Разделитель */
+}
+
 .review-meta span { /* Рейтинг */
      font-weight: bold;
      color: var(--text-light);
@@ -548,6 +616,60 @@ body {
 }
 .review-item span i.fa-star {
      color: var(--accent-yellow);
+}
+.review-item small {
+    color: #888;
+    font-size: 0.85em;
+    margin-left: 5px;
+}
+.like-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--text-light); /* Цвет неактивного лайка */
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s ease;
+}
+.like-button:hover {
+    background-color: rgba(0,0,0,0.05);
+}
+
+.like-button i {
+    font-size: 1.3em;
+    /* Убираем transition для transform, так как теперь это делает animation */
+    transition: color 0.2s ease; 
+    /* Добавим display: inline-block для корректной работы transform, если понадобится */
+    display: inline-block; 
+}
+
+.like-button .likes-count {
+    margin-left: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+    min-width: 15px;
+    text-align: left;
+}
+
+/* Стиль для лайкнутой кнопки (влияет на цвет иконки) */
+.like-button.liked i { /* Иконка внутри лайкнутой кнопки */
+    color: var(--red);
+}
+
+@keyframes heartBeat {
+    0% { transform: scale(1); }
+    25% { transform: scale(1.3) rotate(-5deg); } /* Немного добавим вращения */
+    50% { transform: scale(1) rotate(0deg); }
+    75% { transform: scale(1.2) rotate(5deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Применение анимации к иконке, когда у нее есть класс animate-heart */
+/* Было: .like-button i.animate-heart */
+.like-button .animate-heart { 
+    animation: heartBeat 0.6s ease-out;
 }
 /* Желтый */
 .avatar-glow-yellow { box-shadow: 0 0 10px 4px var(--accent-yellow), 0 0 0 4px var(--white); }
@@ -594,11 +716,7 @@ body {
 .level-text-cyan-purple { background-image: linear-gradient(45deg, var(--accent-cyan), var(--accent-purple)); }
 .level-text-gold { background-image: linear-gradient(45deg, #FFD700, #FFA000); } /* Золотой градиент */
 
-.review-item small {
-    color: #888;
-    font-size: 0.85em;
-    margin-left: 5px;
-}
+
 
 /* Стили страницы "Люди" */
 .people-grid {
@@ -719,6 +837,95 @@ body {
     background-color: #FFB6C1; /* Чуть темнее розовый при наведении */
 }
 
+.achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); /* Адаптивные колонки, мин. 120px */
+    gap: 15px; /* Промежуток между блоками */
+    padding-top: 10px; /* Небольшой отступ сверху */
+}
+@media (min-width: 480px) { /* На экранах пошире - всегда 3 колонки */
+    .achievements-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+
+.achievement-block {
+    background-color: var(--white);
+    border: 2px solid var(--border-color); /* Серая обводка по умолчанию */
+    border-radius: 10px;
+    padding: 15px 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between; /* Распределяем контент */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.achievement-block.completed {
+    border-color: var(--accent-green); /* Зеленая обводка для выполненных */
+    background-color: #f0fff0; /* Легкий зеленый фон */
+}
+
+.achievement-icon {
+    font-size: 2.2em; /* Размер иконки */
+    margin-bottom: 8px;
+    color: var(--text-light); /* Серый цвет для невыполненных */
+    line-height: 1; /* Убирает лишние отступы */
+}
+.achievement-block.completed .achievement-icon {
+    color: var(--accent-green); /* Зеленый цвет для выполненных */
+}
+
+.achievement-title {
+    font-size: 0.95em;
+    font-weight: 700;
+    margin-bottom: 4px;
+    color: var(--text-color);
+    line-height: 1.2;
+}
+
+.achievement-description {
+    font-size: 0.75em;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    min-height: 28px; /* Чтобы выровнять блоки с разной длиной описания */
+    line-height: 1.3;
+}
+
+.achievement-progress-bar-container {
+    width: 90%; /* Ширина шкалы */
+    height: 10px; /* Высота шкалы */
+    background-color: #e9ecef; /* Фон шкалы */
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+    border: 1px solid #ced4da; /* Обводка шкалы */
+}
+.achievement-block.completed .achievement-progress-bar-container {
+    border-color: #5cb85c; /* Темно-зеленая обводка для выполненных */
+}
+
+.achievement-progress-bar-fill {
+    height: 100%;
+    background-color: #adb5bd; /* Серая заливка для невыполненных */
+    border-radius: 4px; /* Чтобы внутренний радиус был чуть меньше */
+    transition: width 0.5s ease-out;
+}
+.achievement-block.completed .achievement-progress-bar-fill {
+    background-color: var(--accent-green); /* Зеленая заливка для выполненных */
+}
+
+.achievement-progress-text {
+    font-size: 0.7em;
+    font-weight: bold;
+    color: var(--text-light);
+}
+.achievement-block.completed .achievement-progress-text {
+    color: var(--accent-green);
+}
 
 /* Нижняя панель */
 .app-footer {

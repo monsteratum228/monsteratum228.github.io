@@ -49,22 +49,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Инициализация Telegram Web App ---
     let tgUser = {}; // Объект для данных пользователя TG
     let userId = 'guest'; // ID пользователя
-    const mockMyReviews = [
-        { id: 1, reviewer: "Иван П.", avatar: `https://via.placeholder.com/30/4682B4/FFFFFF?text=И`, rating: 5.0, text: "Все супер, рекомендую!", date: "2025-05-03" },
-        { id: 2, reviewer: "Елена В.", avatar: `https://via.placeholder.com/30/8A2BE2/FFFFFF?text=Е`, rating: 4.0, text: "Немного опоздала, но в целом все хорошо.", date: "2025-04-30" },
-        { id: 3, reviewer: "Сергей М.", avatar: `https://via.placeholder.com/30/008080/FFFFFF?text=С`, rating: 5.0, text: "Отлично пообщались!", date: "2025-04-25" },
-        { id: 4, reviewer: "Ольга К.", avatar: `https://via.placeholder.com/30/FF6347/FFFFFF?text=О`, rating: 4.5, text: "Приятная девушка, все понравилось.", date: "2025-04-22" },
-        { id: 5, reviewer: "Петр Л.", avatar: `https://via.placeholder.com/30/7B3F00/FFFFFF?text=П`, rating: 3.5, text: "Не очень понял юмора, но в целом ок.", date: "2025-04-20" },
-        { id: 6, reviewer: "Мария Д.", avatar: `https://via.placeholder.com/30/FF69B4/FFFFFF?text=М`, rating: 5.0, text: "Лучшая встреча!", date: "2025-04-15" },
+    window.mockMyReviews = [
+        { id: 1, reviewer: "Иван П.", reviewerId: "user123", avatar: `https://via.placeholder.com/30/4682B4/FFFFFF?text=И`, rating: 5.0, text: "Все супер, рекомендую!", date: "2025-05-03", likes: 25, isLiked: false },
+        { id: 2, reviewer: "Елена В.", reviewerId: "user124", avatar: `https://via.placeholder.com/30/8A2BE2/FFFFFF?text=Е`, rating: 4.0, text: "Немного опоздала, но в целом все хорошо.", date: "2025-04-30", likes: 10, isLiked: true }, // Пример лайкнутого
+        { id: 3, reviewer: "Сергей М.", reviewerId: "user125", avatar: `https://via.placeholder.com/30/008080/FFFFFF?text=С`, rating: 5.0, text: "Отлично пообщались!", date: "2025-04-25", likes: 30, isLiked: false },
+        // ... и так далее для остальных
+        { id: 4, reviewer: "Ольга К.", reviewerId: "user126", avatar: `https://via.placeholder.com/30/FF6347/FFFFFF?text=О`, rating: 4.5, text: "Приятная девушка, все понравилось.", date: "2025-04-22", likes: 18, isLiked: false },
+        { id: 5, reviewer: "Петр Л.", reviewerId: "user127", avatar: `https://via.placeholder.com/30/7B3F00/FFFFFF?text=П`, rating: 3.5, text: "Не очень понял юмора, но в целом ок.", date: "2025-04-20", likes: 5, isLiked: false },
+        { id: 6, reviewer: "Мария Д.", reviewerId: "user128", avatar: `https://via.placeholder.com/30/FF69B4/FFFFFF?text=М`, rating: 5.0, text: "Лучшая встреча!", date: "2025-04-15", likes: 42, isLiked: true },
     ];
     // Отзывы, ОСТАВЛЕННЫЕ МНОЙ (для page-reviews-history)
-    const mockReviewsHistory = [
-         { id: 10, targetUser: "Петр Л.", avatar: `https://via.placeholder.com/30/7B3F00/FFFFFF?text=П`, rating: 5.0, text: "Отличная встреча, все прошло хорошо!", date: "2025-05-01" },
-         { id: 11, targetUser: "Мария К.", avatar: `https://via.placeholder.com/30/FF69B4/FFFFFF?text=М`, rating: 4.5, text: "Приятный собеседник.", date: "2025-04-28" },
-         { id: 12, targetUser: "Дмитрий С.", avatar: `https://via.placeholder.com/30/556B2F/FFFFFF?text=Д`, rating: 4.0, text: "Нормально посидели.", date: "2025-04-26" },
-         { id: 13, targetUser: "Анна В.", avatar: `https://via.placeholder.com/30/DC143C/FFFFFF?text=А`, rating: 5.0, text: "Очень интересно было!", date: "2025-04-18" },
-         { id: 14, targetUser: "Екатерина Ж.", avatar: `https://via.placeholder.com/30/FFD700/FFFFFF?text=Е`, rating: 5.0, text: "Рекомендую!", date: "2025-04-10" },
-         { id: 15, targetUser: "Михаил П.", avatar: `https://via.placeholder.com/30/191970/FFFFFF?text=М`, rating: 3.0, text: "Скучновато.", date: "2025-04-05" },
+    window.mockReviewsHistory = [
+         { id: 10, targetUser: "Петр Л.", targetUserId: "user127", avatar: `https://via.placeholder.com/30/7B3F00/FFFFFF?text=П`, rating: 5.0, text: "Отличная встреча, все прошло хорошо!", date: "2025-05-01", likes: 12, isLiked: false },
+         { id: 11, targetUser: "Мария К.", targetUserId: "user128", avatar: `https://via.placeholder.com/30/FF69B4/FFFFFF?text=М`, rating: 4.5, text: "Приятный собеседник.", date: "2025-04-28", likes: 8, isLiked: true }, // Пример лайкнутого
+         // ... и так далее для остальных
+         { id: 12, targetUser: "Дмитрий С.", targetUserId: "user129", avatar: `https://via.placeholder.com/30/556B2F/FFFFFF?text=Д`, rating: 4.0, text: "Нормально посидели.", date: "2025-04-26", likes: 3, isLiked: false },
+         { id: 13, targetUser: "Анна В.", targetUserId: "user130", avatar: `https://via.placeholder.com/30/DC143C/FFFFFF?text=А`, rating: 5.0, text: "Очень интересно было!", date: "2025-04-18", likes: 22, isLiked: false },
+         { id: 14, targetUser: "Екатерина Ж.", targetUserId: "user131", avatar: `https://via.placeholder.com/30/FFD700/FFFFFF?text=Е`, rating: 5.0, text: "Рекомендую!", date: "2025-04-10", likes: 15, isLiked: false },
+         { id: 15, targetUser: "Михаил П.", targetUserId: "user132", avatar: `https://via.placeholder.com/30/191970/FFFFFF?text=М`, rating: 3.0, text: "Скучновато.", date: "2025-04-05", likes: 1, isLiked: false },
     ];
     const mockUserAchievements = [
         {
@@ -79,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'rating_4_7',
             title: 'Мастер Оценки',
-            description: 'Получить средний рейтинг 4.7+ на основе минимум 3 отзывов.',
+            description: 'Получить средний рейтинг 4.7+',
             iconClass: 'fas fa-star-half-alt',
             targetValue: 4.7, // Цель по рейтингу
             currentValue: 0,  // Будет обновлено из mockMyReviews
@@ -88,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'reviews_left_5',
-            title: 'Словоохотливый',
+            title: 'Общительный',
             description: 'Оставить более 5 отзывов другим пользователям.',
             iconClass: 'fas fa-comments',
             targetValue: 5,
@@ -98,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         {
             id: 'reviews_received_3',
             title: 'Душа Компании',
-            description: 'Получить более 3 отзывов от других пользователей.',
+            description: 'Получить более 3 отзывов от пользователей.',
             iconClass: 'fas fa-users',
             targetValue: 3,
             currentValue: 0, // Будет обновлено из mockMyReviews.length
@@ -115,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         {
             id: 'first_search',
-            title: 'Любознательный Искатель',
+            title: 'Искатель Приключений',
             description: 'Воспользоваться поиском хотя бы 1 раз.',
             iconClass: 'fas fa-search-location',
             targetValue: 1, // 0 - не выполнено, 1 - выполнено
@@ -151,48 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
-    function updateAchievementsProgress() {
-        mockUserAchievements.forEach(ach => {
-            switch (ach.id) {
-                case 'level_3':
-                    ach.currentValue = currentUserLevel;
-                    break;
-                case 'rating_4_7':
-                    if (mockMyReviews.length >= ach.reviewsNeeded) {
-                        const totalRating = mockMyReviews.reduce((sum, review) => sum + review.rating, 0);
-                        ach.currentValue = parseFloat((totalRating / mockMyReviews.length).toFixed(1));
-                    } else {
-                        ach.currentValue = 0; // Недостаточно отзывов для расчета
-                    }
-                    break;
-                case 'reviews_left_5':
-                    ach.currentValue = mockReviewsHistory.length;
-                    break;
-                case 'reviews_received_3':
-                    ach.currentValue = mockMyReviews.length;
-                    break;
-                case 'profile_reliability_90':
-                    // Предположим, что у нас есть доступ к значению надежности
-                    // Для примера возьмем статичное или из DOM, если оно там обновляется
-                    const reliabilityElement = document.querySelector('.progress-bar-fill.reliability');
-                    if (reliabilityElement) {
-                        ach.currentValue = parseFloat(reliabilityElement.style.width) || 80;
-                    }
-                    break;
-                case 'first_search':
-                    // Это можно было бы хранить в localStorage
-                    // ach.currentValue = localStorage.getItem('firstSearchDone') === 'true' ? 1 : 0;
-                    // Пока оставим как есть, для демонстрации
-                    break;
-            }
-            // Обновляем статус выполнения
-            if (ach.id === 'rating_4_7') {
-                 ach.isCompleted = ach.currentValue >= ach.targetValue && mockMyReviews.length >= ach.reviewsNeeded;
-            } else {
-                 ach.isCompleted = ach.currentValue >= ach.targetValue;
-            }
-        });
-    }
+    
 
     try {
         if (window.Telegram && window.Telegram.WebApp) {
@@ -246,7 +207,180 @@ document.addEventListener('DOMContentLoaded', () => {
         if (headerAvatar) headerAvatar.src = url.replace('/90/', '/40/'); // Уменьшаем размер для хедера
     }
 
+    function handleReviewListClick(event) {
+        console.log('----- handleReviewListClick START -----'); // Чтобы видеть начало КАЖДОГО вызова
+        console.log('Clicked element:', event.target);
+        console.log('Clicked element parent:', event.target.parentElement);
+        console.log('Clicked element grand parent:', event.target.parentElement?.parentElement);
 
+        const target = event.target;
+
+        // --- Обработка кнопки опций (три точки) ---
+        const optionsButton = target.closest('.review-options-button');
+        if (optionsButton) {
+            event.stopPropagation(); // Предотвращаем закрытие меню при клике на саму кнопку
+            const menu = optionsButton.querySelector('.review-options-menu');
+            if (menu) {
+                // Закрыть все другие открытые меню
+                document.querySelectorAll('.review-options-menu.active').forEach(otherMenu => {
+                    if (otherMenu !== menu) {
+                        otherMenu.classList.remove('active');
+                    }
+                });
+                menu.classList.toggle('active');
+            }
+            return; // Выходим, чтобы не обрабатывать клик вне меню ниже
+        }
+
+        // --- Обработка клика по пункту меню опций ---
+        const menuItem = target.closest('.review-options-menu li');
+        if (menuItem) {
+            console.log('Options menu item detected.');
+            const action = menuItem.dataset.action;
+            const reviewId = menuItem.dataset.reviewId;
+            const userIdForProfile = menuItem.dataset.userId; // ID для открытия профиля
+            const reviewItemElement = menuItem.closest('.review-item');
+
+            console.log(`Menu Action: ${action}, Review ID: ${reviewId}, User ID: ${userIdForProfile}`);
+
+            switch (action) {
+                case 'report':
+                    // TODO: Открыть модалку для жалобы
+                    alert(`Жалоба на отзыв ID: ${reviewId}`);
+                    break;
+                case 'profile':
+                    // TODO: Открыть профиль пользователя userIdForProfile
+                    // Это может быть открытие модалки profile-modal с данными этого пользователя
+                    alert(`Открыть профиль пользователя ID: ${userIdForProfile}`);
+                    // openUserProfileModal(userIdForProfile); // Нужна функция для этого
+                    break;
+                case 'hide':
+                    if (reviewItemElement) {
+                        reviewItemElement.style.display = 'none'; // Просто скрыть элемент
+                        // TODO: Можно добавить сообщение "Отзыв скрыт" и кнопку "Отменить"
+                    }
+                    break;
+            }
+            // Закрыть меню после выбора
+            const parentMenu = menuItem.closest('.review-options-menu');
+            if (parentMenu) parentMenu.classList.remove('active');
+            return;
+        }
+
+        // --- Обработка кнопки лайка ---
+       // Внутри функции handleReviewListClick:
+
+        // --- Обработка кнопки лайка ---
+        let likeButton = target.closest('.like-button');
+        if (!likeButton && (target.tagName === 'I' || target.tagName === 'SPAN') && target.parentElement.classList.contains('like-button')) {
+            likeButton = target.parentElement;
+           
+        } else if (!likeButton && target.tagName === 'BUTTON' && target.classList.contains('like-button')) {
+            likeButton = target; // Кликнули на саму кнопку
+            
+        }
+
+
+        
+
+        if (likeButton) {
+           
+            const reviewId = parseInt(likeButton.dataset.reviewId); 
+            const dataSourceType = likeButton.dataset.source; 
+        
+            // Проверяем значение dataSourceType
+            
+        
+            let sourceArray;
+            switch (dataSourceType) {
+                case 'myReviews':
+                    sourceArray = window.mockMyReviews;
+                    break;
+                case 'reviewsHistory':
+                    sourceArray = window.mockReviewsHistory;
+                    break;
+                default:
+                
+                    return;
+            }
+        
+            // Проверяем, что массив не пустой
+
+        
+            // Ищем отзыв
+            const review = sourceArray.find(r => r.id === reviewId);
+            if (review) {
+                review.isLiked = !review.isLiked;
+                review.likes += review.isLiked ? 1 : -1;
+
+                // Обновляем DOM
+                const heartIcon = likeButton.querySelector('i'); // Это элемент <i>
+                const likesCountSpan = likeButton.querySelector('.likes-count');
+
+                likesCountSpan.textContent = review.likes;
+
+                // Сначала удаляем все классы, связанные с состоянием лайка и анимацией
+                likeButton.classList.remove('liked', 'animate-heart'); // Убираем animate-heart с кнопки, если был
+                heartIcon.classList.remove('fas', 'far', 'animate-heart'); // Убираем все с иконки
+
+                if (review.isLiked) {
+                    likeButton.classList.add('liked'); // Класс для стилизации кнопки (например, цвет текста)
+                    heartIcon.classList.add('fas');   // Заполненное сердце
+                    heartIcon.classList.add('fa-heart'); // Основной класс иконки
+                    
+                    // Применяем анимацию к иконке
+                    heartIcon.classList.add('animate-heart');
+                    // Убираем класс анимации после ее завершения, чтобы она могла сработать снова
+                    setTimeout(() => {
+                        heartIcon.classList.remove('animate-heart');
+                    }, 600); // Должно совпадать с длительностью анимации
+                } else {
+                    // likeButton.classList.remove('liked'); // Уже удалили выше
+                    heartIcon.classList.add('far');   // Пустое сердце
+                    heartIcon.classList.add('fa-heart'); // Основной класс иконки
+                }
+                 console.log(`Liked review ID: ${reviewId}, Liked: ${review.isLiked}, Likes: ${review.likes}`);
+            }
+            return;
+        }
+
+        // Если клик был не по кнопке опций и не по меню, закрываем все открытые меню
+        document.querySelectorAll('.review-options-menu.active').forEach(menu => {
+            menu.classList.remove('active');
+        });
+    }
+
+    if (myReviewsListContainer) {
+        console.log("Attaching listener to myReviewsListContainer");
+        myReviewsListContainer.addEventListener('click', handleReviewListClick);
+    } else {
+        console.error("myReviewsListContainer NOT FOUND when trying to attach listener!");
+    }
+
+    if (reviewsHistoryListContainer) {
+        console.log("Attaching listener to reviewsHistoryListContainer");
+        reviewsHistoryListContainer.addEventListener('click', handleReviewListClick);
+    } else {
+        console.error("reviewsHistoryListContainer NOT FOUND when trying to attach listener!");
+    }
+
+    if (modalReviewsContainer) { // modalReviewsContainer - это контейнер для отзывов в МОДАЛКЕ ПРОФИЛЯ ДРУГОГО ЮЗЕРА
+        console.log("Attaching listener to modalReviewsContainer");
+        modalReviewsContainer.addEventListener('click', handleReviewListClick);
+    } else {
+        console.error("modalReviewsContainer (for profile modal) NOT FOUND when trying to attach listener!");
+    }
+    // Дополнительно: закрывать меню опций при клике в любом месте документа, кроме самого меню
+    document.addEventListener('click', (event) => {
+        const isClickInsideOptionsMenu = event.target.closest('.review-options-menu');
+        const isClickOnOptionsButton = event.target.closest('.review-options-button');
+
+        if (!isClickInsideOptionsMenu && !isClickOnOptionsButton) {
+            document.querySelectorAll('.review-options-menu.active').forEach(menu => {
+                menu.classList.remove('active');
+            });
+        }
+    });
     // --- XP Система ---
     const MAX_LEVEL = 10;
     const BASE_XP_PER_LEVEL = 50; // Было 50, сделаем 100 для первого
@@ -405,7 +539,186 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
 
+      function populateMyReviewsPage() {
+        if (!myReviewsListContainer || !myReviewsCountSpan || !myReviewsAvgRatingSpan || !myRatingIndicator) return;
 
+        myReviewsListContainer.innerHTML = ''; // Очищаем предыдущие отзывы
+
+        if (mockMyReviews.length === 0) {
+             myReviewsCountSpan.textContent = 'Всего отзывов: 0';
+             myReviewsAvgRatingSpan.textContent = 'Средний рейтинг: -';
+             myRatingIndicator.style.left = '50%'; // По центру, если нет рейтинга
+             myReviewsListContainer.innerHTML = '<p class="loading-placeholder">Пока нет ни одного отзыва.</p>';
+            return;
+        }
+
+        let totalRating = 0;
+        mockMyReviews.forEach(review => {
+            totalRating += review.rating;
+            myReviewsListContainer.innerHTML += createReviewItemHTML(review, false); // false - не история
+        });
+
+        const averageRating = totalRating / mockMyReviews.length;
+        myReviewsCountSpan.textContent = `Всего отзывов: ${mockMyReviews.length}`;
+        myReviewsAvgRatingSpan.textContent = `Средний рейтинг: ${averageRating.toFixed(1)}`;
+
+        // Обновляем положение индикатора на шкале (от 0% до 100%)
+        const indicatorPosition = (averageRating / 5) * 100;
+        myRatingIndicator.style.left = `${Math.max(0, Math.min(100, indicatorPosition))}%`;
+    }
+
+    /** Заполняет страницу "История отзывов" */
+    function populateReviewsHistoryPage() {
+         if (!reviewsHistoryListContainer || !historyReviewsCountSpan || !historyStarSummaryContainer) return;
+
+         reviewsHistoryListContainer.innerHTML = ''; // Очищаем
+
+         if (mockReviewsHistory.length === 0) {
+             historyReviewsCountSpan.textContent = 'Всего оставлено: 0';
+             historyStarSummaryContainer.innerHTML = '<p class="loading-placeholder">Вы еще не оставляли отзывы.</p>';
+             reviewsHistoryListContainer.innerHTML = '<p class="loading-placeholder">Нет оставленных отзывов.</p>';
+             return;
+         }
+
+         const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+         mockReviewsHistory.forEach(review => {
+             const roundedRating = Math.round(review.rating); // Округляем для статистики
+             if (roundedRating >= 1 && roundedRating <= 5) {
+                 starCounts[roundedRating]++;
+             }
+             reviewsHistoryListContainer.innerHTML += createReviewItemHTML(review, true); // true - это история
+         });
+
+         historyReviewsCountSpan.textContent = `Всего оставлено: ${mockReviewsHistory.length}`;
+
+         // Генерируем HTML для статистики по звездам
+         let summaryHTML = '';
+         for (let i = 5; i >= 1; i--) {
+             if (starCounts[i] > 0) { // Показываем только те, что есть
+                  summaryHTML += `
+                     <div class="star-rating-line">
+                    <span class="star-icons">${'<i class="fas fa-star"></i>'.repeat(i)}</span>
+                    <span class="star-label">${i} ${i === 1 ? 'звезда' : (i > 1 && i < 5 ? 'звезды' : 'звезд')}:</span>
+                    <span class="star-count">${starCounts[i]}</span>
+                    </div>
+                 `;
+             }
+         }
+         historyStarSummaryContainer.innerHTML = summaryHTML || '<p class="loading-placeholder">Нет данных для статистики.</p>';
+    }
+
+    function createReviewItemHTML(review, isHistory) {
+        const title = isHistory ? `Отзыв на ${review.targetUser}:` : `От ${review.reviewer}:`;
+        const avatar = review.avatar || `https://via.placeholder.com/30/${getRandomColor()}/FFFFFF?text=?`;
+        const rating = review.rating.toFixed(1);
+        const date = new Date(review.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric'});
+        // ID пользователя для опции "Профиль"
+        const relevantUserId = isHistory ? review.targetUserId : review.reviewerId;
+
+         return `
+            <div class="review-item" data-review-id="${review.id}"> <div class="review-options-button">
+                    <i class="fas fa-ellipsis-v"></i>
+                    <div class="review-options-menu">
+                        <ul>
+                            <li data-action="report" data-review-id="${review.id}"><i class="fas fa-flag"></i> Пожаловаться</li>
+                            <li data-action="profile" data-user-id="${relevantUserId}"><i class="fas fa-user-circle"></i> Профиль</li>
+                            <li data-action="hide" data-review-id="${review.id}"><i class="fas fa-eye-slash"></i> Скрыть отзыв</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="review-header">
+                     <img src="${avatar}" alt="Аватар" class="review-avatar">
+                     <div class="review-info">
+                        <p><strong>${title}</strong> "${review.text}"</p>
+                        <div class="review-meta">
+                            <span><i class="fas fa-star"></i> ${rating}</span>
+                            <small>${date}</small>
+                        </div>
+                     </div>
+                 </div>
+                 <div class="review-actions">
+                     <button class="like-button ${review.isLiked ? 'liked' : ''}" data-review-id="${review.id}"data-source="${isHistory ? 'reviewsHistory' : 'myReviews'}">
+                         <i class="${review.isLiked ? 'fas' : 'far'} fa-heart"></i>
+                         <span class="likes-count">${review.likes}</span>
+                     </button>
+                 </div>
+            </div>
+        `;
+   }
+    if (headerIconsContainer) {
+        headerIconsContainer.addEventListener('click', (event) => {
+             const targetElement = event.target.closest('.header-icon');
+             if (!targetElement) return;
+
+             // Клик по иконке Настроек
+             if (targetElement.classList.contains('settings-icon')) {
+                 const modalTargetId = targetElement.getAttribute('data-modal-target');
+                 if (modalTargetId === 'modal-settings') {
+                    // Генерируем контент и открываем модалку Настроек
+                    const title = 'Настройки';
+                    const contentHTML = `
+                         <h4>Настройки приложения</h4>
+                         <p>Здесь скоро появятся настройки уведомлений, приватности и другие опции.</p>
+                         <label><input type="checkbox" checked> Получать уведомления об отзывах</label><br>
+                         <label><input type="checkbox"> Скрывать профиль от незнакомцев</label>
+                     `;
+                     openGenericModal(modalTargetId, title, contentHTML);
+                 }
+             }
+             // Клик по иконке Уведомлений
+             else if (targetElement.classList.contains('notification-icon-container')) {
+                  console.log("Notifications clicked!");
+                  // TODO: Реализовать показ окна/списка уведомлений
+                  // Например, открыть модалку с другим контентом:
+                  // openGenericModal('modal-notifications', 'Уведомления', '<ul><li>Новый отзыв от Ивана!</li></ul>');
+                  // Или скрыть бэдж:
+                  const badge = targetElement.querySelector('.notification-badge');
+                  if (badge) badge.style.display = 'none'; // Скрыть бэдж при клике
+             }
+        });
+    }
+    function updateAchievementsProgress() {
+        mockUserAchievements.forEach(ach => {
+            switch (ach.id) {
+                case 'level_3':
+                    ach.currentValue = currentUserLevel;
+                    break;
+                case 'rating_4_7':
+                    if (mockMyReviews.length >= ach.reviewsNeeded) {
+                        const totalRating = mockMyReviews.reduce((sum, review) => sum + review.rating, 0);
+                        ach.currentValue = parseFloat((totalRating / mockMyReviews.length).toFixed(1));
+                    } else {
+                        ach.currentValue = 0; // Недостаточно отзывов для расчета
+                    }
+                    break;
+                case 'reviews_left_5':
+                    ach.currentValue = mockReviewsHistory.length;
+                    break;
+                case 'reviews_received_3':
+                    ach.currentValue = mockMyReviews.length;
+                    break;
+                case 'profile_reliability_90':
+                    // Предположим, что у нас есть доступ к значению надежности
+                    // Для примера возьмем статичное или из DOM, если оно там обновляется
+                    const reliabilityElement = document.querySelector('.progress-bar-fill.reliability');
+                    if (reliabilityElement) {
+                        ach.currentValue = parseFloat(reliabilityElement.style.width) || 80;
+                    }
+                    break;
+                case 'first_search':
+                    // Это можно было бы хранить в localStorage
+                    // ach.currentValue = localStorage.getItem('firstSearchDone') === 'true' ? 1 : 0;
+                    // Пока оставим как есть, для демонстрации
+                    break;
+            }
+            // Обновляем статус выполнения
+            if (ach.id === 'rating_4_7') {
+                 ach.isCompleted = ach.currentValue >= ach.targetValue && mockMyReviews.length >= ach.reviewsNeeded;
+            } else {
+                 ach.isCompleted = ach.currentValue >= ach.targetValue;
+            }
+        });
+    }
     // --- Навигация по нижним кнопкам (без изменений) ---
     navButtons.forEach(button => {
         button.addEventListener('click', () => {
@@ -462,19 +775,30 @@ document.addEventListener('DOMContentLoaded', () => {
             let contentHTML = '<p>Контент не найден.</p>'; // Контент по умолчанию
 
             // Определяем контент и заголовок для каждой кнопки меню
-            switch (modalTargetId) {
+           switch (modalTargetId) {
                 case 'modal-achievements':
                     title = 'Достижения';
-                    contentHTML = `
-                        <h4>Ваши Достижения</h4>
-                        <ul>
-                            <li><i class="fas fa-star"></i> Новичок (Уровень 1)</li>
-                            <li><i class="fas fa-comments"></i> Общительный (10+ отзывов)</li>
-                            <li><i class="fas fa-heart"></i> Надежный партнер (Рейтинг 4.8+)</li>
-                            <li>... другие достижения</li>
-                        </ul>
-                        <p>Продолжайте в том же духе!</p>
-                    `;
+                    updateAchievementsProgress(); // Обновляем прогресс перед отображением
+                    contentHTML = '<div class="achievements-grid">';
+                    mockUserAchievements.forEach(ach => {
+                        const progressPercent = ach.targetValue > 0 ? Math.min((ach.currentValue / ach.targetValue) * 100, 100) : (ach.isCompleted ? 100 : 0);
+                        const displayCurrentValue = ach.isCompleted && ach.targetValue > 0 ? ach.targetValue : ach.currentValue;
+                        // Для бинарных (0/1) достижений текст будет 0/1 или 1/1
+                        const progressText = `${ach.isCompleted && ach.targetValue === 1 ? 1 : displayCurrentValue}/${ach.targetValue}`;
+
+                        contentHTML += `
+                            <div class="achievement-block ${ach.isCompleted ? 'completed' : ''}">
+                                <i class="${ach.iconClass} achievement-icon"></i>
+                                <h5 class="achievement-title">${ach.title}</h5>
+                                <p class="achievement-description">${ach.description}</p>
+                                <div class="achievement-progress-bar-container">
+                                    <div class="achievement-progress-bar-fill" style="width: ${progressPercent}%;"></div>
+                                </div>
+                                <span class="achievement-progress-text">${progressText}</span>
+                            </div>
+                        `;
+                    });
+                    contentHTML += '</div>'; // Закрываем achievements-grid
                     break;
                     case 'modal-referral':
                         title = 'Реферальная программа';
@@ -576,129 +900,7 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
         });
     });
-    function populateMyReviewsPage() {
-        if (!myReviewsListContainer || !myReviewsCountSpan || !myReviewsAvgRatingSpan || !myRatingIndicator) return;
-
-        myReviewsListContainer.innerHTML = ''; // Очищаем предыдущие отзывы
-
-        if (mockMyReviews.length === 0) {
-             myReviewsCountSpan.textContent = 'Всего отзывов: 0';
-             myReviewsAvgRatingSpan.textContent = 'Средний рейтинг: -';
-             myRatingIndicator.style.left = '50%'; // По центру, если нет рейтинга
-             myReviewsListContainer.innerHTML = '<p class="loading-placeholder">Пока нет ни одного отзыва.</p>';
-            return;
-        }
-
-        let totalRating = 0;
-        mockMyReviews.forEach(review => {
-            totalRating += review.rating;
-            myReviewsListContainer.innerHTML += createReviewItemHTML(review, false); // false - не история
-        });
-
-        const averageRating = totalRating / mockMyReviews.length;
-        myReviewsCountSpan.textContent = `Всего отзывов: ${mockMyReviews.length}`;
-        myReviewsAvgRatingSpan.textContent = `Средний рейтинг: ${averageRating.toFixed(1)}`;
-
-        // Обновляем положение индикатора на шкале (от 0% до 100%)
-        const indicatorPosition = (averageRating / 5) * 100;
-        myRatingIndicator.style.left = `${Math.max(0, Math.min(100, indicatorPosition))}%`;
-    }
-
-    /** Заполняет страницу "История отзывов" */
-    function populateReviewsHistoryPage() {
-         if (!reviewsHistoryListContainer || !historyReviewsCountSpan || !historyStarSummaryContainer) return;
-
-         reviewsHistoryListContainer.innerHTML = ''; // Очищаем
-
-         if (mockReviewsHistory.length === 0) {
-             historyReviewsCountSpan.textContent = 'Всего оставлено: 0';
-             historyStarSummaryContainer.innerHTML = '<p class="loading-placeholder">Вы еще не оставляли отзывы.</p>';
-             reviewsHistoryListContainer.innerHTML = '<p class="loading-placeholder">Нет оставленных отзывов.</p>';
-             return;
-         }
-
-         const starCounts = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
-         mockReviewsHistory.forEach(review => {
-             const roundedRating = Math.round(review.rating); // Округляем для статистики
-             if (roundedRating >= 1 && roundedRating <= 5) {
-                 starCounts[roundedRating]++;
-             }
-             reviewsHistoryListContainer.innerHTML += createReviewItemHTML(review, true); // true - это история
-         });
-
-         historyReviewsCountSpan.textContent = `Всего оставлено: ${mockReviewsHistory.length}`;
-
-         // Генерируем HTML для статистики по звездам
-         let summaryHTML = '';
-         for (let i = 5; i >= 1; i--) {
-             if (starCounts[i] > 0) { // Показываем только те, что есть
-                  summaryHTML += `
-                     <div class="star-rating-line">
-                    <span class="star-icons">${'<i class="fas fa-star"></i>'.repeat(i)}</span>
-                    <span class="star-label">${i} ${i === 1 ? 'звезда' : (i > 1 && i < 5 ? 'звезды' : 'звезд')}:</span>
-                    <span class="star-count">${starCounts[i]}</span>
-                    </div>
-                 `;
-             }
-         }
-         historyStarSummaryContainer.innerHTML = summaryHTML || '<p class="loading-placeholder">Нет данных для статистики.</p>';
-    }
-
-    /** Генерирует HTML для одного элемента отзыва */
-    function createReviewItemHTML(review, isHistory) {
-         const title = isHistory ? `Отзыв на ${review.targetUser}:` : `От ${review.reviewer}:`;
-         const avatar = review.avatar || `https://via.placeholder.com/30/${getRandomColor()}/FFFFFF?text=?`;
-         const rating = review.rating.toFixed(1);
-         const date = new Date(review.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric'});
-
-          return `
-             <div class="review-item">
-                 <div class="review-header">
-                      <img src="${avatar}" alt="Аватар" class="review-avatar">
-                      <div class="review-info">
-                         <p><strong>${title}</strong> "${review.text}"</p>
-                         <div class="review-meta">
-                             <span><i class="fas fa-star"></i> ${rating}</span>
-                             <small>${date}</small>
-                         </div>
-                      </div>
-                  </div>
-             </div>
-         `;
-    }
-    if (headerIconsContainer) {
-        headerIconsContainer.addEventListener('click', (event) => {
-             const targetElement = event.target.closest('.header-icon');
-             if (!targetElement) return;
-
-             // Клик по иконке Настроек
-             if (targetElement.classList.contains('settings-icon')) {
-                 const modalTargetId = targetElement.getAttribute('data-modal-target');
-                 if (modalTargetId === 'modal-settings') {
-                    // Генерируем контент и открываем модалку Настроек
-                    const title = 'Настройки';
-                    const contentHTML = `
-                         <h4>Настройки приложения</h4>
-                         <p>Здесь скоро появятся настройки уведомлений, приватности и другие опции.</p>
-                         <label><input type="checkbox" checked> Получать уведомления об отзывах</label><br>
-                         <label><input type="checkbox"> Скрывать профиль от незнакомцев</label>
-                     `;
-                     openGenericModal(modalTargetId, title, contentHTML);
-                 }
-             }
-             // Клик по иконке Уведомлений
-             else if (targetElement.classList.contains('notification-icon-container')) {
-                  console.log("Notifications clicked!");
-                  // TODO: Реализовать показ окна/списка уведомлений
-                  // Например, открыть модалку с другим контентом:
-                  // openGenericModal('modal-notifications', 'Уведомления', '<ul><li>Новый отзыв от Ивана!</li></ul>');
-                  // Или скрыть бэдж:
-                  const badge = targetElement.querySelector('.notification-badge');
-                  if (badge) badge.style.display = 'none'; // Скрыть бэдж при клике
-             }
-        });
-    }
-
+    
     // --- Открытие/закрытие модального окна ПРОФИЛЯ ПОЛЬЗОВАТЕЛЯ (обновлен вызов генерации отзывов) ---
     if (peopleGrid) {
         peopleGrid.addEventListener('click', (event) => {
@@ -719,6 +921,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     }
+
     function closeModal() { /* ... */
         modalOverlay.style.display = 'none';
         profileModal.style.display = 'none';
@@ -726,17 +929,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (modalCloseButton) modalCloseButton.addEventListener('click', closeModal);
     if (modalOverlay) modalOverlay.addEventListener('click', (event) => { if (event.target === modalOverlay) closeModal(); });
-    function generateFakeReviewsWithAvatarsForModal(userName) {
+    function generateFakeReviewsWithAvatarsForModal(userName, targetUserId) { // targetUserId - ID пользователя, чей профиль смотрим
         let reviewsHtml = '';
-        const numReviews = Math.floor(Math.random() * 3) + 1; // 1-3 отзыва в модалке
-        for (let i=0; i<numReviews; i++){
-             const fakeReview = mockMyReviews[Math.floor(Math.random() * mockMyReviews.length)]; // Берем случайный из моковых
+        // Генерируем несколько случайных отзывов на этого пользователя (targetUserId)
+        // Предположим, что mockMyReviews - это все отзывы в системе, и мы фильтруем их
+        const reviewsAboutTargetUser = mockMyReviews.filter(r => r.reviewerId !== userId); // Не наши собственные отзывы
+        const numReviewsToShow = Math.min(reviewsAboutTargetUser.length, Math.floor(Math.random() * 2) + 1); // 1-2 отзыва
+
+        for (let i = 0; i < numReviewsToShow; i++) {
+             // Берем случайный отзыв, который мог бы быть оставлен на этого пользователя
+             // В реальном приложении здесь были бы реальные отзывы на targetUserId
+            
+             const randomReviewData = reviewsAboutTargetUser[Math.floor(Math.random() * reviewsAboutTargetUser.length)];
+             // Передаем данные в createReviewItemHTML
              reviewsHtml += createReviewItemHTML({
-                 ...fakeReview, // Копируем данные
-                 text: `Случайный отзыв про ${userName}... ${fakeReview.text.substring(0,20)}...` // Делаем текст чуть другим
-             }, false); // false - не история
+                id: randomReviewData.id, // Уникальный ID для модалки
+                reviewer: randomReviewData.reviewer,
+                reviewerId: randomReviewData.reviewerId,
+                avatar: randomReviewData.avatar,
+                rating: randomReviewData.rating,
+                text: `Это демо-отзыв на ${userName}. ${randomReviewData.text.substring(0,30)}...`,
+                date: randomReviewData.date,
+                likes: Math.floor(Math.random() * 10), // Случайные лайки для модалки
+                isLiked: Math.random() < 0.3 // Случайно лайкнут ли
+            }, false); // false - это не история моих отзывов
         }
-        return reviewsHtml || '<p>Отзывов пока нет.</p>';
+        return reviewsHtml || '<p class="loading-placeholder">Отзывов пока нет.</p>';
     }
     // --- Вспомогательные функции (без изменений) ---
     // --- Вспомогательные функции ---
