@@ -3,7 +3,7 @@
     --primary-pink: #f2c08e; /* кандидаты: f2c08e FFD1DC */
     --soft-beige: #FFF0E1; /* Мягкий бежевый */
     --white: #FFFFFF;
-    --text-color: #5D4037; /* Коричневатый для текста */
+    --text-color: #613c32; /* Коричневатый для текста */
     --text-light: #795548; /* Чуть светлее */
     --accent-yellow: #FFC107; /* Более насыщенный желтый для звезд */
     --accent-green: #8BC34A; /* Зеленый для надежности, XP */
@@ -26,11 +26,15 @@
     /* Шрифты */
     --font-main: 'Russo One', sans-serif; /* Новый шрифт */
 }
-
+.header-icons .header-icon:focus {
+    outline: none;
+  }
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-focus-ring-color: transparent;
 }
 
 body {
@@ -239,6 +243,7 @@ body {
     margin: 0;
     color: var(--text-color);
 }
+
 .tab-button {
     background: none;
     border: none;
@@ -431,7 +436,7 @@ body {
     display: flex;
     align-items: center;
     width: 100%;
-    padding: 12px 15px;
+    padding: 17px 10px;
     background-color: var(--white);
     border: 1px solid var(--border-color);
     border-radius: 10px;
@@ -998,4 +1003,41 @@ body {
     color: #aaa;
     padding: 20px;
     font-style: italic;
+}
+/* Стили для реферального блока */
+/* Стили для реферального контейнера */
+.referral-container {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.referral-link {
+    width: 100%;
+    padding: 12px;
+    font-family: var(--font-main);
+    color: var(--text-color);
+    background-color: var(--soft-beige);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+}
+
+.copy-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-pink);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--font-main);
+    transition: background-color 0.2s;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.copy-btn:hover {
+    background-color: var(--accent-orange);
 }

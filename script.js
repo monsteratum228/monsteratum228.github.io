@@ -66,6 +66,133 @@ document.addEventListener('DOMContentLoaded', () => {
          { id: 14, targetUser: "Екатерина Ж.", avatar: `https://via.placeholder.com/30/FFD700/FFFFFF?text=Е`, rating: 5.0, text: "Рекомендую!", date: "2025-04-10" },
          { id: 15, targetUser: "Михаил П.", avatar: `https://via.placeholder.com/30/191970/FFFFFF?text=М`, rating: 3.0, text: "Скучновато.", date: "2025-04-05" },
     ];
+    const mockUserAchievements = [
+        {
+            id: 'level_3',
+            title: 'Новичок Плюс',
+            description: 'Достигнуть 3-го уровня профиля.',
+            iconClass: 'fas fa-angle-double-up',
+            targetValue: 3,
+            currentValue: 1, // Будет обновлено из currentUserLevel
+            isCompleted: false
+        },
+        {
+            id: 'rating_4_7',
+            title: 'Мастер Оценки',
+            description: 'Получить средний рейтинг 4.7+ на основе минимум 3 отзывов.',
+            iconClass: 'fas fa-star-half-alt',
+            targetValue: 4.7, // Цель по рейтингу
+            currentValue: 0,  // Будет обновлено из mockMyReviews
+            reviewsNeeded: 3, // Минимальное кол-во отзывов для этого достижения
+            isCompleted: false
+        },
+        {
+            id: 'reviews_left_5',
+            title: 'Словоохотливый',
+            description: 'Оставить более 5 отзывов другим пользователям.',
+            iconClass: 'fas fa-comments',
+            targetValue: 5,
+            currentValue: 0, // Будет обновлено из mockReviewsHistory.length
+            isCompleted: false
+        },
+        {
+            id: 'reviews_received_3',
+            title: 'Душа Компании',
+            description: 'Получить более 3 отзывов от других пользователей.',
+            iconClass: 'fas fa-users',
+            targetValue: 3,
+            currentValue: 0, // Будет обновлено из mockMyReviews.length
+            isCompleted: false
+        },
+        {
+            id: 'profile_reliability_90',
+            title: 'Образец Надежности',
+            description: 'Достигнуть надежности профиля 90%+',
+            iconClass: 'fas fa-shield-alt',
+            targetValue: 90, // Проценты
+            currentValue: 80, // Пример, может браться из элемента #reliability-bar
+            isCompleted: false
+        },
+        {
+            id: 'first_search',
+            title: 'Любознательный Искатель',
+            description: 'Воспользоваться поиском хотя бы 1 раз.',
+            iconClass: 'fas fa-search-location',
+            targetValue: 1, // 0 - не выполнено, 1 - выполнено
+            currentValue: 0, // Пример, можно хранить в localStorage
+            isCompleted: false
+        }
+    ];
+    document.addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('copy-btn')) {
+            const input = e.target.closest('.referral-input-container').querySelector('.referral-link');
+            input.select();
+            
+            try {
+                navigator.clipboard.writeText(input.value).then(() => {
+                    const status = e.target.closest('.referral-input-container').nextElementSibling;
+                    if (status && status.classList.contains('copy-status')) {
+                        status.style.display = 'block';
+                        setTimeout(() => {
+                            status.style.display = 'none';
+                        }, 2000);
+                    }
+                });
+            } catch (err) {
+                // Fallback для старых браузеров
+                document.execCommand('copy');
+                const status = e.target.closest('.referral-input-container').nextElementSibling;
+                if (status && status.classList.contains('copy-status')) {
+                    status.style.display = 'block';
+                    setTimeout(() => {
+                        status.style.display = 'none';
+                    }, 2000);
+                }
+            }
+        }
+    });
+    function updateAchievementsProgress() {
+        mockUserAchievements.forEach(ach => {
+            switch (ach.id) {
+                case 'level_3':
+                    ach.currentValue = currentUserLevel;
+                    break;
+                case 'rating_4_7':
+                    if (mockMyReviews.length >= ach.reviewsNeeded) {
+                        const totalRating = mockMyReviews.reduce((sum, review) => sum + review.rating, 0);
+                        ach.currentValue = parseFloat((totalRating / mockMyReviews.length).toFixed(1));
+                    } else {
+                        ach.currentValue = 0; // Недостаточно отзывов для расчета
+                    }
+                    break;
+                case 'reviews_left_5':
+                    ach.currentValue = mockReviewsHistory.length;
+                    break;
+                case 'reviews_received_3':
+                    ach.currentValue = mockMyReviews.length;
+                    break;
+                case 'profile_reliability_90':
+                    // Предположим, что у нас есть доступ к значению надежности
+                    // Для примера возьмем статичное или из DOM, если оно там обновляется
+                    const reliabilityElement = document.querySelector('.progress-bar-fill.reliability');
+                    if (reliabilityElement) {
+                        ach.currentValue = parseFloat(reliabilityElement.style.width) || 80;
+                    }
+                    break;
+                case 'first_search':
+                    // Это можно было бы хранить в localStorage
+                    // ach.currentValue = localStorage.getItem('firstSearchDone') === 'true' ? 1 : 0;
+                    // Пока оставим как есть, для демонстрации
+                    break;
+            }
+            // Обновляем статус выполнения
+            if (ach.id === 'rating_4_7') {
+                 ach.isCompleted = ach.currentValue >= ach.targetValue && mockMyReviews.length >= ach.reviewsNeeded;
+            } else {
+                 ach.isCompleted = ach.currentValue >= ach.targetValue;
+            }
+        });
+    }
 
     try {
         if (window.Telegram && window.Telegram.WebApp) {
@@ -316,13 +443,14 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     function openGenericModal(modalId, title, contentHTML) {
-        console.log(`Opening generic modal: ${modalId}`);
-        if (genericModalTitle) genericModalTitle.textContent = title;
-        if (genericModalContent) genericModalContent.innerHTML = contentHTML;
-        if (genericModalOverlay) genericModalOverlay.style.display = 'block';
-        if (genericModal) genericModal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-   }
+        // ... (как раньше) ...
+         console.log(`Opening generic modal: ${modalId}`);
+         if (genericModalTitle) genericModalTitle.textContent = title;
+         if (genericModalContent) genericModalContent.innerHTML = contentHTML; // Важно: эта строка должна быть здесь
+         if (genericModalOverlay) genericModalOverlay.style.display = 'block';
+         if (genericModal) genericModal.style.display = 'block';
+         document.body.style.overflow = 'hidden';
+    }
     // --- Обработка кнопок в МЕНЮ (открытие универсальной модалки) ---
     if (menuPage) {
         menuPage.addEventListener('click', (event) => {
@@ -348,15 +476,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p>Продолжайте в том же духе!</p>
                     `;
                     break;
-                case 'modal-referral':
-                    title = 'Реферальная программа';
-                    contentHTML = `
-                        <h4>Пригласите друзей!</h4>
-                        <p>Поделитесь вашей уникальной ссылкой:</p>
-                        <input type="text" value="t.me/DateCheckerBot?start=${userId}" readonly style="width: 100%; padding: 8px; margin-bottom: 10px;">
-                        <p>Получайте <strong>+100 XP</strong> за каждого друга, который зарегистрируется и получит первый отзыв!</p>
-                    `;
-                    break;
+                    case 'modal-referral':
+                        title = 'Реферальная программа';
+                        contentHTML = `
+                            <h4>Пригласите друзей!</h4>
+                            <p>Поделитесь вашей уникальной ссылкой:</p>
+                            <div class="referral-input-container">
+                                <input type="text" class="referral-link" value="t.me/DateCheckerBot?start=${userId}" readonly>
+                                <button class="copy-btn">Скопировать ссылку</button>
+                            </div>
+                            <p class="copy-status" style="display:none; color: var(--green); margin-top: 5px;">Ссылка скопирована!</p>
+                            <p>Получайте <strong>+100 XP</strong> за каждого друга, который зарегистрируется и получит первый отзыв!</p>
+                        `;
+                        break;
                 case 'modal-partnership':
                     title = 'Партнерство';
                     contentHTML = `
