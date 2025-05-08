@@ -208,64 +208,51 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function handleReviewListClick(event) {
-        console.log('----- handleReviewListClick START -----'); // Чтобы видеть начало КАЖДОГО вызова
-        console.log('Clicked element:', event.target);
-        console.log('Clicked element parent:', event.target.parentElement);
-        console.log('Clicked element grand parent:', event.target.parentElement?.parentElement);
-
         const target = event.target;
-
-        // --- Обработка кнопки опций (три точки) ---
+        
+        // --- Обработка клика на кнопке опций (открытие/закрытие меню) ---
         const optionsButton = target.closest('.review-options-button');
         if (optionsButton) {
-            event.stopPropagation(); // Предотвращаем закрытие меню при клике на саму кнопку
+            // Закрыть другие открытые меню
+            document.querySelectorAll('.review-options-menu.active').forEach(menu => {
+                if (menu !== optionsButton.querySelector('.review-options-menu')) {
+                    menu.classList.remove('active');
+                }
+            });
+            // Переключить текущее меню
             const menu = optionsButton.querySelector('.review-options-menu');
-            if (menu) {
-                // Закрыть все другие открытые меню
-                document.querySelectorAll('.review-options-menu.active').forEach(otherMenu => {
-                    if (otherMenu !== menu) {
-                        otherMenu.classList.remove('active');
-                    }
-                });
-                menu.classList.toggle('active');
-            }
-            return; // Выходим, чтобы не обрабатывать клик вне меню ниже
+            if (menu) menu.classList.toggle('active');
+            event.stopPropagation(); // Предотвращаем всплытие, чтобы не сработал document.click
+            return;
         }
-
-        // --- Обработка клика по пункту меню опций ---
+    
+        // --- Обработка пунктов меню ---
         const menuItem = target.closest('.review-options-menu li');
         if (menuItem) {
             console.log('Options menu item detected.');
             const action = menuItem.dataset.action;
             const reviewId = menuItem.dataset.reviewId;
-            const userIdForProfile = menuItem.dataset.userId; // ID для открытия профиля
+            const userIdForProfile = menuItem.dataset.userId;
             const reviewItemElement = menuItem.closest('.review-item');
-
-            console.log(`Menu Action: ${action}, Review ID: ${reviewId}, User ID: ${userIdForProfile}`);
-
+    
             switch (action) {
                 case 'report':
-                    // TODO: Открыть модалку для жалобы
                     alert(`Жалоба на отзыв ID: ${reviewId}`);
                     break;
                 case 'profile':
-                    // TODO: Открыть профиль пользователя userIdForProfile
-                    // Это может быть открытие модалки profile-modal с данными этого пользователя
                     alert(`Открыть профиль пользователя ID: ${userIdForProfile}`);
-                    // openUserProfileModal(userIdForProfile); // Нужна функция для этого
                     break;
                 case 'hide':
-                    if (reviewItemElement) {
-                        reviewItemElement.style.display = 'none'; // Просто скрыть элемент
-                        // TODO: Можно добавить сообщение "Отзыв скрыт" и кнопку "Отменить"
-                    }
+                    if (reviewItemElement) reviewItemElement.style.display = 'none';
                     break;
             }
-            // Закрыть меню после выбора
+            
+            // Закрыть меню
             const parentMenu = menuItem.closest('.review-options-menu');
             if (parentMenu) parentMenu.classList.remove('active');
             return;
         }
+    
 
         // --- Обработка кнопки лайка ---
        // Внутри функции handleReviewListClick:
@@ -279,9 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
             likeButton = target; // Кликнули на саму кнопку
             
         }
-
-
-        
 
         if (likeButton) {
            
@@ -517,6 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Кнопки действий в профиле ---
     document.querySelectorAll('.profile-actions .action-button[data-target]').forEach(button => {
         button.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
           const targetId = this.getAttribute('data-target');
           
           // 1. Скрываем все страницы
@@ -528,6 +513,19 @@ document.addEventListener('DOMContentLoaded', () => {
           const targetPage = document.getElementById(targetId);
           if (targetPage) {
             targetPage.classList.add('active');
+            const backButton = targetPage.querySelector('.back-button');
+            if (backButton) {
+                backButton.onclick = (e) => {
+                    e.preventDefault();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    
+                    // Скрываем текущую страницу
+                    targetPage.classList.remove('active');
+                    
+                    // Показываем страницу профиля
+                    document.getElementById('page-profile').classList.add('active');
+                };
+            }
             
             // 3. Загружаем данные если нужно
             if (targetId === 'page-my-reviews') {
@@ -645,38 +643,100 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
    }
-    if (headerIconsContainer) {
-        headerIconsContainer.addEventListener('click', (event) => {
-             const targetElement = event.target.closest('.header-icon');
-             if (!targetElement) return;
+   if (headerIconsContainer) {
+    headerIconsContainer.addEventListener('click', (event) => {
+        const targetElement = event.target.closest('.header-icon');
+        if (!targetElement) return;
 
-             // Клик по иконке Настроек
-             if (targetElement.classList.contains('settings-icon')) {
-                 const modalTargetId = targetElement.getAttribute('data-modal-target');
-                 if (modalTargetId === 'modal-settings') {
-                    // Генерируем контент и открываем модалку Настроек
-                    const title = 'Настройки';
-                    const contentHTML = `
-                         <h4>Настройки приложения</h4>
-                         <p>Здесь скоро появятся настройки уведомлений, приватности и другие опции.</p>
-                         <label><input type="checkbox" checked> Получать уведомления об отзывах</label><br>
-                         <label><input type="checkbox"> Скрывать профиль от незнакомцев</label>
-                     `;
-                     openGenericModal(modalTargetId, title, contentHTML);
-                 }
-             }
-             // Клик по иконке Уведомлений
-             else if (targetElement.classList.contains('notification-icon-container')) {
-                  console.log("Notifications clicked!");
-                  // TODO: Реализовать показ окна/списка уведомлений
-                  // Например, открыть модалку с другим контентом:
-                  // openGenericModal('modal-notifications', 'Уведомления', '<ul><li>Новый отзыв от Ивана!</li></ul>');
-                  // Или скрыть бэдж:
-                  const badge = targetElement.querySelector('.notification-badge');
-                  if (badge) badge.style.display = 'none'; // Скрыть бэдж при клике
-             }
-        });
-    }
+        // Клик по иконке Настроек
+        if (targetElement.classList.contains('settings-icon')) {
+            const modalTargetId = targetElement.getAttribute('data-modal-target');
+            if (modalTargetId === 'modal-settings') {
+                const title = 'Настройки';
+                const contentHTML = `
+                    <h4>Настройки приложения</h4>
+                    <p>Здесь скоро появятся настройки уведомлений, приватности и другие опции.</p>
+                    <label><input type="checkbox" checked> Получать уведомления об отзывах</label><br>
+                    <label><input type="checkbox"> Скрывать профиль от незнакомцев</label>
+                `;
+                openGenericModal(modalTargetId, title, contentHTML);
+            }
+        }
+        // Клик по иконке Уведомлений
+        else if (targetElement.classList.contains('notification-icon-container')) {
+            const badge = targetElement.querySelector('.notification-badge');
+            if (badge) badge.style.display = 'none';
+            
+            const title = 'Уведомления';
+            const contentHTML = `
+    <div class="notifications-container">
+        <div class="notification-item unread">
+            <div class="notification-icon">
+                <i class="fas fa-thumbs-up"></i>
+            </div>
+            <div class="notification-content">
+                <p class="notification-text">На ваш комментарий поставили <strong>5 лайков</strong></p>
+                <p class="notification-time">10 минут назад</p>
+            </div>
+        </div>
+        
+        <div class="notification-item unread">
+            <div class="notification-icon">
+                <i class="fas fa-comment"></i>
+            </div>
+            <div class="notification-content">
+                <p class="notification-text">На вашем профиле <strong>новый комментарий</strong> от пользователя @Anna</p>
+                <p class="notification-time">35 минут назад</p>
+            </div>
+        </div>
+        
+        <div class="notification-item">
+            <div class="notification-icon">
+                <i class="fas fa-eye"></i>
+            </div>
+            <div class="notification-content">
+                <p class="notification-text">Ваш профиль просмотрели <strong>70 человек</strong> за сегодня</p>
+                <p class="notification-time">2 часа назад</p>
+            </div>
+        </div>
+        
+        <div class="notification-item">
+            <div class="notification-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <div class="notification-content">
+                <p class="notification-text">Вы получили <strong>новый отзыв</strong> с оценкой 5 звёзд</p>
+                <p class="notification-time">Вчера, 18:45</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="notifications-actions">
+        <button class="mark-all-read">Отметить всё как прочитанное</button>
+        <button class="clear-all">Очистить все</button>
+    </div>
+`;
+            
+            openGenericModal('modal-notifications', title, contentHTML);
+            
+            // Добавляем обработчики для кнопок в модалке
+            setTimeout(() => {
+                const modal = document.getElementById('modal-notifications');
+                if (modal) {
+                    modal.querySelector('.mark-all-read')?.addEventListener('click', () => {
+                        modal.querySelectorAll('.notification-item').forEach(item => {
+                            item.classList.remove('unread');
+                        });
+                    });
+                    
+                    modal.querySelector('.clear-all')?.addEventListener('click', () => {
+                        modal.querySelectorAll('.notification-item').forEach(item => item.remove());
+                    });
+                }
+            }, 100);
+        }
+    });
+}
     function updateAchievementsProgress() {
         mockUserAchievements.forEach(ach => {
             switch (ach.id) {
@@ -838,7 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
                          <p><a href="mailto:support@datechecker.example">support@datechecker.example</a> или в Telegram <a href="https://t.me/DateCheckerSupportBot" target="_blank">@DateCheckerSupportBot</a></p>
                      `;
                     break;
-                // Добавьте другие case для новых кнопок меню
+                
             }
 
             // Заполняем и показываем универсальную модалку
@@ -967,6 +1027,8 @@ document.addEventListener('DOMContentLoaded', () => {
      styleSheet.innerText = `@keyframes shake { 0% { transform: translateX(0); } 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 75% { transform: translateX(-3px); } 100% { transform: translateX(0); } }`;
      document.head.appendChild(styleSheet);
 
+     document.querySelector('.review-list').addEventListener('click', handleReviewListClick);
+     document.querySelector('.review-list').innerHTML += createReviewItemHTML(review, false);
 
     // --- Инициализация при загрузке ---
     updateXPDisplay(); // Первичный вызов для отображения XP и свечения

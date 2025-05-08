@@ -154,6 +154,8 @@ body {
 
 .page {
     display: none; /* Скрываем все страницы по умолчанию */
+    scroll-margin-top: 0; /* Отключаем автоматические отступы */
+    scroll-padding-top: 0;
 }
 
 .page.active {
@@ -447,10 +449,132 @@ body {
     cursor: pointer;
     transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
-.action-button:hover {
-    background-color: #f9f9f9;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+.back-button {
+    display: flex;
+    align-items: center;
+    width: 9%;
+    padding: 8px 10px;
+    background-color: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    text-align: left;
+    font-size: 0.8em;
+    font-family: var(--font-main);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
 }
+/* Стили для модального окна уведомлений */
+/* Обновленные стили для уведомлений */
+.notifications-container {
+    max-height: 400px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+    padding-right: 5px; /* Добавляем небольшой отступ вместо скроллбара */
+    
+    /* Скрываем стандартный скроллбар */
+    scrollbar-width: none; /* Для Firefox */
+    -ms-overflow-style: none; /* Для IE и Edge */
+}
+
+/* Скрываем скроллбар для WebKit браузеров */
+.notifications-container::-webkit-scrollbar {
+    display: none;
+}
+
+.notification-item {
+    display: flex;
+    padding: 15px 0; /* Увеличиваем вертикальные отступы */
+    margin: 0 -15px; /* Расширяем строки по ширине */
+    padding-left: 15px;
+    padding-right: 15px;
+    border-bottom: 1px solid #eee;
+    align-items: flex-start;
+    transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+    background-color: #f8f9fa;
+}
+
+.notification-item.unread {
+    /*background-color: #f8f9fa; */
+    position: relative;
+}
+
+.notification-item.unread::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background-color: #007bff;
+    border-radius: 50%;
+}
+
+.notification-icon {
+    width: 44px; /* Увеличиваем размер иконок */
+    height: 44px;
+    background-color: #e9ecef;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 18px; /* Увеличиваем отступ от текста */
+    color: #495057;
+    font-size: 18px; /* Увеличиваем размер иконок */
+    flex-shrink: 0;
+}
+
+.notification-content {
+    flex: 1;
+    min-width: 0; /* Предотвращаем переполнение */
+}
+
+.notification-text {
+    margin: 0;
+    color: #212529;
+    font-size: 15px; /* Увеличиваем размер текста */
+    line-height: 1.4;
+}
+
+.notification-time {
+    margin: 5px 0 0;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.notifications-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+    gap: 10px;
+}
+
+.notifications-actions button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    color: #495057;
+    cursor: pointer;
+    font-size: 14px;
+    flex: 1;
+    transition: all 0.2s;
+}
+
+.notifications-actions button:hover {
+    background-color: #e9ecef;
+    transform: translateY(-1px);
+}
+
+/* Иконки для разных типов уведомлений */
+.fa-thumbs-up { color: #28a745; }
+.fa-comment { color: #17a2b8; }
+.fa-eye { color: #6c757d; }
+.fa-star { color: #ffc107; }
 
 .action-icon {
     font-size: 1.2em;
@@ -825,9 +949,10 @@ body {
     padding: 10px 25px;
     font-size: 1em;
     background-color: var(--primary-pink);
-    color: var(--text-color);
-    font-weight: bold;
+    color: var(--text-light);
+    font-weight: 500;
     border: none;
+    font-family: var(--font-main);
     border-radius: 20px;
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -934,14 +1059,15 @@ body {
     left: 0;
     width: 100%;
     height: var(--footer-height);
-    background-color: var(--white);
-    border-top: 1px solid var(--border-color);
+    background-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    border-top-left-radius: 12px; /* Закругляем левый нижний угол */
+    border-top-right-radius: 12px; 
     display: flex;
     justify-content: space-around;
     align-items: center;
     padding: 5px 0;
     z-index: 1000;
-
 }
 
 .nav-button {
@@ -1060,9 +1186,6 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px; /* Промежуток между кнопками меню */
-}
-#page-menu .action-button .arrow-icon {
-    /* display: none; */ /* Раскомментируйте, если стрелка не нужна */
 }
 
 /* --- Стили НОВОГО универсального модального окна --- */
