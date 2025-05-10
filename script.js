@@ -43,12 +43,22 @@ document.addEventListener('DOMContentLoaded', () => {
      const historyReviewsCountSpan = document.getElementById('history-reviews-count');
      const historyStarSummaryContainer = document.getElementById('history-star-summary');
      const reviewsHistoryListContainer = document.getElementById('reviews-history-list');
+    // modal comments
+     const reviewFormContainer = document.getElementById('modal-review-form-container');
+    const reviewFormStarsContainer = document.getElementById('review-form-stars');
+    const reviewFormTagsContainer = document.getElementById('review-form-tags');
+    const reviewFormTextInput = document.getElementById('review-form-text');
+    const reviewFormSubmitButton = document.getElementById('review-form-submit');
+     
  
  
  
     // --- Инициализация Telegram Web App ---
     let tgUser = {}; // Объект для данных пользователя TG
     let userId = 'guest'; // ID пользователя
+    let currentReviewTargetUserId = null;
+    let selectedStarRating = 0;
+    let selectedReviewTags = []; // Массив ID выбранных тегов
     window.mockMyReviews = [
         { id: 1, reviewer: "Иван П.", reviewerId: "user123", avatar: `https://via.placeholder.com/30/4682B4/FFFFFF?text=И`, rating: 5.0, text: "Все супер, рекомендую!", date: "2025-05-03", likes: 25, isLiked: false },
         { id: 2, reviewer: "Елена В.", reviewerId: "user124", avatar: `https://via.placeholder.com/30/8A2BE2/FFFFFF?text=Е`, rating: 4.0, text: "Немного опоздала, но в целом все хорошо.", date: "2025-04-30", likes: 10, isLiked: true }, // Пример лайкнутого
@@ -67,6 +77,28 @@ document.addEventListener('DOMContentLoaded', () => {
          { id: 13, targetUser: "Анна В.", targetUserId: "user130", avatar: `https://via.placeholder.com/30/DC143C/FFFFFF?text=А`, rating: 5.0, text: "Очень интересно было!", date: "2025-04-18", likes: 22, isLiked: false },
          { id: 14, targetUser: "Екатерина Ж.", targetUserId: "user131", avatar: `https://via.placeholder.com/30/FFD700/FFFFFF?text=Е`, rating: 5.0, text: "Рекомендую!", date: "2025-04-10", likes: 15, isLiked: false },
          { id: 15, targetUser: "Михаил П.", targetUserId: "user132", avatar: `https://via.placeholder.com/30/191970/FFFFFF?text=М`, rating: 3.0, text: "Скучновато.", date: "2025-04-05", likes: 1, isLiked: false },
+    ];
+    const positiveReviewTags = [
+        { id: 'tag-photo-ok', text: "Фото соответствуют", iconClass: "fas fa-camera-retro" },
+        { id: 'tag-success-meet', text: "Успешная встреча", iconClass: "fas fa-handshake" },
+        { id: 'tag-great-person', text: "Отличный человек", iconClass: "fas fa-user-check" },
+        { id: 'tag-date-good', text: "Свидание прошло хорошо", iconClass: "fas fa-glass-cheers" },
+        { id: 'tag-nice-talk', text: "Прекрасная беседа", iconClass: "fas fa-comments" },
+        { id: 'tag-punctual', text: "Пунктуальный", iconClass: "fas fa-clock" },
+        { id: 'tag-polite', text: "Вежливый", iconClass: "fas fa-smile-beam" },
+        { id: 'tag-interesting', text: "Интересный собеседник", iconClass: "fas fa-brain" },
+        { id: 'tag-clean-look', text: "Опрятный вид", iconClass: "fas fa-user-tie" } // Дополнительный
+    ];
+    
+    const negativeReviewTags = [
+        { id: 'tag-bad-talk', text: "Ужасное общение", iconClass: "fas fa-comment-slash" },
+        { id: 'tag-bad-time', text: "Плохо прошло время", iconClass: "fas fa-calendar-times" },
+        { id: 'tag-date-unpleasant', text: "Свидание неприятное", iconClass: "fas fa-sad-tear" },
+        { id: 'tag-messy-look', text: "Вид неопрятный", iconClass: "fas fa-user-alt-slash" }, // Используем другую иконку
+        { id: 'tag-photo-mismatch', text: "Фото не совпали", iconClass: "fas fa-image" }, // Добавляем иконку к "fas fa-not-equal" или "fas fa-user-secret"
+        { id: 'tag-late', text: "Опоздал(а)", iconClass: "fas fa-history" },
+        { id: 'tag-rude', text: "Грубый", iconClass: "fas fa-angry" },
+        { id: 'tag-boring', text: "Скучный собеседник", iconClass: "fas fa-bed" }
     ];
     const mockUserAchievements = [
         {
@@ -154,7 +186,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-
     try {
         if (window.Telegram && window.Telegram.WebApp) {
             const tg = window.Telegram.WebApp;
@@ -610,11 +641,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const avatar = review.avatar || `https://via.placeholder.com/30/${getRandomColor()}/FFFFFF?text=?`;
         const rating = review.rating.toFixed(1);
         const date = new Date(review.date).toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', year: 'numeric'});
-        // ID пользователя для опции "Профиль"
         const relevantUserId = isHistory ? review.targetUserId : review.reviewerId;
-
-         return `
-            <div class="review-item" data-review-id="${review.id}"> <div class="review-options-button">
+    
+        // Генерируем HTML для иконок выбранных тегов
+        let tagIconsHTML = '';
+        if (review.selectedTags && review.selectedTags.length > 0) {
+            tagIconsHTML = '<div class="review-tag-icons-display">';
+            review.selectedTags.forEach(tag => {
+                tagIconsHTML += `<i class="${tag.iconClass}" title="${tag.text}"></i>`;
+            });
+            tagIconsHTML += '</div>';
+        }
+    
+        return `
+            <div class="review-item" data-review-id="${review.id}">
+                <div class="review-options-button">
                     <i class="fas fa-ellipsis-v"></i>
                     <div class="review-options-menu">
                         <ul>
@@ -627,22 +668,180 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="review-header">
                      <img src="${avatar}" alt="Аватар" class="review-avatar">
                      <div class="review-info">
-                        <p><strong>${title}</strong> "${review.text}"</p>
-                        <div class="review-meta">
-                            <span><i class="fas fa-star"></i> ${rating}</span>
-                            <small>${date}</small>
+                        <div class="review-meta"> <span><i class="fas fa-star"></i> ${rating}</span>
+                            ${tagIconsHTML} <small>${date}</small>
                         </div>
+                        <p><strong>${title}</strong> "${review.text}"</p>
                      </div>
                  </div>
                  <div class="review-actions">
-                     <button class="like-button ${review.isLiked ? 'liked' : ''}" data-review-id="${review.id}"data-source="${isHistory ? 'reviewsHistory' : 'myReviews'}">
+                     <button class="like-button ${review.isLiked ? 'liked' : ''}" data-review-id="${review.id}" data-source="${isHistory ? 'reviewsHistory' : 'myReviews'}">
                          <i class="${review.isLiked ? 'fas' : 'far'} fa-heart"></i>
                          <span class="likes-count">${review.likes}</span>
                      </button>
                  </div>
             </div>
         `;
-   }
+    }
+    if (reviewFormStarsContainer) {
+        const stars = Array.from(reviewFormStarsContainer.children);
+    
+        // Подсветка звезд при наведении
+        reviewFormStarsContainer.addEventListener('mouseover', (event) => {
+            const starValue = parseInt(event.target.dataset.starValue);
+            if (!starValue) return;
+            stars.forEach((star, index) => {
+                star.classList.toggle('hovered', index < starValue);
+                // Используем far/fas для временной подсветки
+                star.classList.toggle('fas', index < starValue);
+                star.classList.toggle('far', index >= starValue && !star.classList.contains('selected'));
+            });
+        });
+    
+        // Сброс подсветки при уходе мыши (возврат к selected)
+        reviewFormStarsContainer.addEventListener('mouseout', () => {
+            stars.forEach((star, index) => {
+                star.classList.remove('hovered');
+                const isSelected = star.classList.contains('selected');
+                star.classList.toggle('fas', isSelected);
+                star.classList.toggle('far', !isSelected);
+            });
+        });
+    
+        // Клик по звезде
+        reviewFormStarsContainer.addEventListener('click', (event) => {
+            const starValue = parseInt(event.target.dataset.starValue);
+            if (!starValue) return;
+            selectedStarRating = starValue;
+            stars.forEach((star, index) => {
+                star.classList.toggle('selected', index < starValue);
+                // Обновляем иконку на постоянной основе
+                star.classList.toggle('fas', index < starValue);
+                star.classList.toggle('far', index >= starValue);
+            });
+            console.log("Selected rating:", selectedStarRating);
+            populateReviewTags(selectedStarRating); // Показываем теги
+        });
+    }
+    function populateReviewTags(rating) {
+        if (!reviewFormTagsContainer) return;
+        reviewFormTagsContainer.innerHTML = ''; // Очищаем контейнер
+        
+        // Всегда показываем контейнер, даже если тегов нет
+        reviewFormTagsContainer.style.display = 'flex'; 
+        reviewFormTagsContainer.style.minHeight = '50px'; // Фиксированная высота
+        
+        // Определяем теги для всех рейтингов 1-5
+        const tagsToShow = rating >= 4 
+            ? positiveReviewTags 
+            : negativeReviewTags; // 1-3 звезды
+    
+        // Добавляем все теги, даже если массив пуст
+        tagsToShow.forEach(tag => {
+            const tagButton = document.createElement('button');
+            tagButton.classList.add('review-tag-button');
+            tagButton.innerHTML = `<i class="${tag.iconClass}"></i> ${tag.text}`;
+            reviewFormTagsContainer.appendChild(tagButton);
+        });
+    
+        // Если тегов нет, добавляем заглушку
+        if (tagsToShow.length === 0) {
+            reviewFormTagsContainer.innerHTML = `
+                <div class="tags-placeholder">
+                    Нет тегов для выбранной оценки
+                </div>
+            `;
+        }
+    }
+    if (reviewFormTagsContainer) {
+        reviewFormTagsContainer.addEventListener('click', (event) => {
+            const tagButton = event.target.closest('.review-tag-button');
+            if (!tagButton) return;
+    
+            const tagId = tagButton.dataset.tagId;
+            tagButton.classList.toggle('selected');
+    
+            if (tagButton.classList.contains('selected')) {
+                if (!selectedReviewTags.find(t => t.id === tagId)) { // Добавляем, если еще нет
+                     const tagData = positiveReviewTags.find(t => t.id === tagId) || negativeReviewTags.find(t => t.id === tagId);
+                     if (tagData) selectedReviewTags.push(tagData);
+                }
+            } else {
+                selectedReviewTags = selectedReviewTags.filter(t => t.id !== tagId);
+            }
+            console.log("Selected tags:", selectedReviewTags);
+        });
+    }
+    if (reviewFormSubmitButton) {
+        reviewFormSubmitButton.addEventListener('click', () => {
+            if (selectedStarRating === 0) {
+                alert("Пожалуйста, выберите оценку (звезды).");
+                return;
+            }
+            if (!currentReviewTargetUserId) {
+                alert("Ошибка: не определен пользователь для отзыва.");
+                return;
+            }
+    
+            const reviewText = reviewFormTextInput.value.trim();
+            const newReviewId = Math.max(0, ...mockMyReviews.map(r => r.id), ...mockReviewsHistory.map(r => r.id)) + 1;
+    
+            const newReview = {
+                id: newReviewId,
+                // Данные текущего пользователя (оставляющего отзыв)
+                reviewer: tgUser.first_name || tgUser.username || "Аноним", // Имя текущего пользователя
+                reviewerId: userId, // ID текущего пользователя
+                avatar: tgUser.photo_url || `https://via.placeholder.com/30/${getRandomColor()}/FFFFFF?text=${(tgUser.first_name || 'A')[0]}`,
+                
+                // Данные о пользователе, которому оставляют отзыв (эти поля не отображаются в createReviewItemHTML если isHistory=false)
+                targetUser: modalName.textContent, // Имя пользователя из модалки
+                targetUserId: currentReviewTargetUserId, 
+    
+                rating: selectedStarRating,
+                text: reviewText,
+                date: new Date().toISOString().split('T')[0], // Сегодняшняя дата
+                likes: 0,
+                isLiked: false,
+                selectedTags: selectedReviewTags.map(tag => ({ text: tag.text, iconClass: tag.iconClass })) // Сохраняем только текст и иконку
+            };
+    
+            console.log("Submitting new review:", newReview);
+    
+            // Добавляем отзыв в начало списка отображаемых в модалке
+            if (modalReviewsContainer) {
+                // Передаем isHistory = false, т.к. это отзыв от "меня" на кого-то, но он НЕ из моей истории ПОКА ЧТО
+                // но createReviewItemHTML ожидает isHistory для определения title.
+                // Чтобы title был "От Аноним:", isHistory должно быть false
+                const reviewItemHTML = createReviewItemHTML(newReview, false);
+                modalReviewsContainer.insertAdjacentHTML('afterbegin', reviewItemHTML); // Добавляем в начало
+            }
+    
+            // Добавляем в "мою историю оставленных отзывов"
+            window.mockReviewsHistory.unshift(newReview); // Добавляем в начало массива
+            // Если активна страница истории, можно ее обновить
+            if (document.getElementById('page-reviews-history')?.classList.contains('active')) {
+                populateReviewsHistoryPage();
+            }
+    
+    
+            // Очистка формы
+            selectedStarRating = 0;
+            selectedReviewTags = [];
+            if(reviewFormTextInput) reviewFormTextInput.value = '';
+            if(reviewFormStarsContainer) {
+                Array.from(reviewFormStarsContainer.children).forEach(star => {
+                    star.classList.remove('selected', 'fas');
+                    star.classList.add('far');
+                });
+            }
+            if(reviewFormTagsContainer) reviewFormTagsContainer.innerHTML = '';
+            if(reviewFormTagsContainer) reviewFormTagsContainer.style.display = 'none';
+    
+            alert("Отзыв добавлен!");
+            // Можно закрыть модалку или обновить ее часть
+        });
+    }    
+    
    if (headerIconsContainer) {
     headerIconsContainer.addEventListener('click', (event) => {
         const targetElement = event.target.closest('.header-icon');
@@ -965,16 +1164,39 @@ document.addEventListener('DOMContentLoaded', () => {
     if (peopleGrid) {
         peopleGrid.addEventListener('click', (event) => {
             const card = event.target.closest('.profile-card');
-            if (card) { /* ... получение данных карточки ... */
+            if (card) {
+                const userIdFromCard = card.dataset.userId; // Получаем ID пользователя из карточки
+                currentReviewTargetUserId = userIdFromCard; // Сохраняем ID для формы отзыва
+    
                 const cardName = card.querySelector('.card-name').textContent;
-                const cardRating = card.querySelector('.card-rating').innerHTML;
-                const cardAvatarSrc = `https://via.placeholder.com/60/${getRandomColor()}/FFFFFF?text=${cardName.charAt(0)}`; // Пример
-
-                modalAvatar.src = cardAvatarSrc;
+                const cardRatingText = card.querySelector('.card-rating').innerHTML;
+                const cardAvatarSrc = card.querySelector('.card-avatar-placeholder i')
+                                        ? `https://via.placeholder.com/60/${getRandomColor()}/FFFFFF?text=${cardName.charAt(0)}`
+                                        : card.querySelector('.card-avatar-placeholder img')?.src; // Если бы там было img
+    
+                modalAvatar.src = cardAvatarSrc || `https://via.placeholder.com/60/${getRandomColor()}/FFFFFF?text=${cardName.charAt(0)}`;
                 modalName.textContent = cardName;
-                modalRating.innerHTML = cardRating;
-                modalReviewsContainer.innerHTML = generateFakeReviewsWithAvatarsForModal(cardName); // Используем старую функцию для модалки (или переделать на createReviewItemHTML)
-
+                modalRating.innerHTML = cardRatingText;
+                
+                // Генерируем отзывы на этого пользователя (userIdFromCard)
+                // TODO: Нужна функция, которая будет получать реальные отзывы на userIdFromCard
+                // Пока используем generateFakeReviewsWithAvatarsForModal, но она не идеальна для этого
+                modalReviewsContainer.innerHTML = generateFakeReviewsWithAvatarsForModal(cardName, userIdFromCard);
+    
+                // Сбрасываем форму отзыва при открытии модалки
+                selectedStarRating = 0;
+                selectedReviewTags = [];
+                if (reviewFormTextInput) reviewFormTextInput.value = '';
+                if (reviewFormStarsContainer) {
+                    Array.from(reviewFormStarsContainer.children).forEach(star => {
+                         star.classList.remove('selected', 'fas', 'hovered');
+                         star.classList.add('far');
+                    });
+                }
+                if (reviewFormTagsContainer) reviewFormTagsContainer.innerHTML = '';
+                if (reviewFormTagsContainer) reviewFormTagsContainer.style.display = 'none';
+    
+    
                 modalOverlay.style.display = 'block';
                 profileModal.style.display = 'block';
                 document.body.style.overflow = 'hidden';

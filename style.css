@@ -948,8 +948,8 @@ body {
 .search-button {
     padding: 10px 25px;
     font-size: 1em;
-    background-color: var(--primary-pink);
-    color: var(--text-light);
+    background-color: #ff8000;
+    color: #251a22;
     font-weight: 500;
     border: none;
     font-family: var(--font-main);
@@ -1371,3 +1371,166 @@ body {
 .copy-btn:hover {
     background-color: var(--accent-orange);
 }
+    .modal-review-form-divider {
+        border: none;
+        height: 1px;
+        background-color: var(--border-color);
+        margin: 25px 0;
+    }
+
+    .modal-review-form h4 {
+        text-align: center;
+        margin-bottom: 15px;
+        font-size: 1.2em;
+        color: var(--text-color);
+        border-top: none; /* Убираем дублирующуюся верхнюю границу, если есть */
+        padding-top: 0;
+    }
+
+    .star-rating-input-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 20px;
+        font-size: 1.8em; /* Размер звезд для ввода */
+    }
+
+    .input-star {
+        cursor: pointer;
+        color: #ccc; /* Цвет пустых звезд (обводка) */
+        margin: 0 5px;
+        transition: color 0.2s ease, transform 0.1s ease;
+    }
+    .input-star:hover {
+        transform: scale(1.1);
+    }
+    .input-star.hovered, /* При наведении */
+    .input-star.selected { /* Выбранные */
+        color: var(--accent-yellow); /* Желтый цвет */
+    }
+
+    .review-tags-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 8px;
+        background: #f9f9f9;
+        border-radius: 6px;
+        overflow-y: auto; /* Скролл включается автоматически */
+        contain: content; /* Оптимизация рендеринга */
+        will-change: transform; /* Фикс для GPU */
+      }
+      
+      /* Кастомный скролл */
+      .review-tags-container::-webkit-scrollbar {
+        width: 8px;
+      }
+      .review-tags-container::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 4px;
+      }
+    .review-tag-button {
+        background-color: #e9ecef;
+        color: var(--text-light);
+        border: 1px solid #ced4da;
+        border-radius: 15px;
+        padding: 6px 12px;
+        font-size: 0.85em;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+    .review-tag-button i {
+        margin-right: 6px;
+        font-size: 0.9em;
+    }
+    .review-tag-button.selected {
+        background-color: var(--accent-green);
+        color: white;
+        border-color: #388e3c; /* Темно-зеленая обводка */
+    }
+    .review-tag-button.selected i.fa-check { /* Показываем галочку, если есть */
+        display: inline-block;
+    }
+    .review-tag-button i.fa-check { /* Скрываем галочку по умолчанию */
+        display: none;
+        margin-left: 4px; /* Отступ для галочки */
+        font-size: 0.8em;
+    }
+
+    /* Для негативных тегов можно добавить отдельные стили при .selected */
+    .review-tag-button.negative.selected {
+        background-color: var(--red);
+        border-color: #c62828; /* Темно-красная обводка */
+    }
+
+
+    .review-text-input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-family: var(--font-main);
+        font-size: 0.95em;
+        min-height: 60px; /* Минимальная высота */
+        margin-bottom: 15px;
+        resize: vertical; /* Разрешаем изменение высоты */
+    }
+
+    .submit-review-button {
+        display: flex; /* Для иконки и текста */
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 1em;
+        font-weight: bold;
+        color: var(--white);
+        background-color: #ff8000;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    .submit-review-button:hover {
+        background-color: #f8b4c4; /* Чуть темнее */
+    }
+    .submit-review-button i {
+        margin-right: 8px;
+    }
+
+    /* Обновляем стили для отображения тегов в уже существующих отзывах */
+    .review-tag-icons-display {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 5px; /* Отступ от рейтинга/даты */
+        margin-bottom: 5px; /* Отступ до текста отзыва, если он ниже */
+    }
+    .review-tag-icons-display i {
+        font-size: 1em; /* Размер иконок тегов */
+        color: var(--text-light); /* Цвет иконок тегов */
+        padding: 2px;
+        /* Можно добавить фон или рамку, если нужно выделить */
+        /* background-color: #f0f0f0; */
+        /* border-radius: 3px; */
+    }
+    .review-info p { /* Убедимся, что основной текст отзыва идет после тегов */
+        clear: both; /* Если теги были float, но с flex это не нужно */
+    }
+    /* Порядок в .review-meta: рейтинг, иконки тегов, дата */
+    .review-meta {
+        font-size: 0.85em;
+        color: #888;
+        display: flex;
+        flex-wrap: wrap; /* Для переноса, если много тегов */
+        align-items: center;
+        gap: 8px; 
+    }
+    .review-meta > span { /* Рейтинг */
+        /* ... */
+    }
+    .review-meta > small { /* Дата */
+        margin-left: auto; 
+    }
